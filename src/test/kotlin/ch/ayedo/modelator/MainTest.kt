@@ -1,4 +1,4 @@
-package com.example
+package ch.ayedo.modelator
 
 import org.testng.annotations.Test
 
