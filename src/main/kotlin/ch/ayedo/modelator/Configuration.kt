@@ -5,11 +5,9 @@ import com.spotify.docker.client.messages.HostConfig
 import com.spotify.docker.client.messages.PortBinding
 import java.nio.file.Path
 
-data class PortMapping(val host: Int, val container: Int)
-
 data class Configuration(val dockerConfig: DockerConfig,
                          val migrationsPath: Path,
-                         val jooqGeneratorConfigPath: Path,
+                         val jooqConfigPath: Path,
                          val outputPath: Path)
 
 data class DockerConfig(val tag: String,
@@ -40,8 +38,11 @@ data class DockerConfig(val tag: String,
     }
 }
 
+
 class Env(private val keysToValues: Map<String, String>) {
     fun asStringList(): List<String> {
         return keysToValues.entries.map({ (key, value) -> "$key=$value" })
     }
 }
+
+data class PortMapping(val host: Int, val container: Int)
