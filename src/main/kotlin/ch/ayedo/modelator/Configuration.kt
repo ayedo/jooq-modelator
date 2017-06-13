@@ -11,7 +11,7 @@ data class Configuration(val dockerConfig: DockerConfig,
 
 data class DockerConfig(val tag: String,
                         val labelKey: String = "ch.ayedo.JooqMetamodelTask.tag",
-                        val env: Env,
+                        val env: List<String>,
                         val portMapping: PortMapping) {
 
     fun toContainerConfig(): ContainerConfig? {
@@ -20,7 +20,7 @@ data class DockerConfig(val tag: String,
         return ContainerConfig.builder()
                 .hostConfig(hostConfig)
                 .image(tag)
-                .env(env.asStringList())
+                .env(env)
                 .exposedPorts(portMapping.container.toString())
                 .labels(mapOf(labelKey to tag))
                 .build()
@@ -34,13 +34,6 @@ data class DockerConfig(val tag: String,
         return HostConfig.builder()
                 .portBindings(portBindings)
                 .build()
-    }
-}
-
-
-class Env(private val keysToValues: Map<String, String>) {
-    fun asStringList(): List<String> {
-        return keysToValues.entries.map({ (key, value) -> "$key=$value" })
     }
 }
 
