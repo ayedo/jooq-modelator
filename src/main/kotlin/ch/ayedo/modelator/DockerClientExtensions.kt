@@ -1,0 +1,26 @@
+package ch.ayedo.modelator
+
+import com.spotify.docker.client.DockerClient
+import com.spotify.docker.client.DockerClient.ListImagesParam.byName
+
+
+fun DockerClient.imageExists(tag: String) = this.listImages(byName(tag)).isNotEmpty()
+
+
+// like the ".use(...)" extension function on Closable, but for running a container
+fun <T> DockerClient.useContainer(containerId: String, fn: () -> T) =
+        try {
+            this.startContainer(containerId)
+            fn()
+        } finally {
+            val info = this.inspectContainer(containerId)
+            if (info.state().running() == true) {
+                this.stopContainer(containerId, 10)
+            }
+        }
+
+fun DockerClient.findLabeledContainers(key: String, value: String) =
+        this.listContainers(DockerClient.ListContainersParam.allContainers())
+                .filter({ container ->
+                    container.labels()?.get(key) == value
+                })
