@@ -7,8 +7,7 @@ import java.nio.file.Path
 
 data class Configuration(val dockerConfig: DockerConfig,
                          val migrationsPath: Path,
-                         val jooqConfigPath: Path,
-                         val outputPath: Path)
+                         val jooqConfigPath: Path)
 
 data class DockerConfig(val tag: String,
                         val labelKey: String = "ch.ayedo.JooqMetamodelTask.tag",
