@@ -49,6 +49,7 @@ class MetamodelGenerator(configuration: Configuration) {
     }
 
     private fun waitForDatabase() {
+
         val healthChecker = HealthChecker.getDefault(databaseConfig, healthCheckConfig)
 
         healthChecker.waitForDatabase()
