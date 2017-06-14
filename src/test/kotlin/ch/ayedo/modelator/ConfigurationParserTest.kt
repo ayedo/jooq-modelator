@@ -12,7 +12,7 @@ class ConfigurationParserTest {
         val fromJooqConfig = DatabaseConfig.fromJooqConfig(configuration)
 
         listOf(fromJooqConfig::user, fromJooqConfig::url, fromJooqConfig::password, fromJooqConfig::driver).forEach {
-            assert(it.get() == it.name)
+            assert(it.get() == it.name, { println("Could not load database configuration from jooq file correctly") })
         }
 
     }
