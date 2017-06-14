@@ -6,8 +6,8 @@ val modelator = project {
     name = "modelator"
     group = "ch.ayedo"
     artifactId = name
-    version = "0.1"
-
+    version = gitDescribe()
+    
     dependencies {
         compile("org.jetbrains.kotlin:kotlin-stdlib-jre7:1.1.2-4")
         compile("net.jodah:failsafe:0.9.1")
@@ -22,10 +22,13 @@ val modelator = project {
 
     dependenciesTest {
         compile("org.testng:testng:6.11")
+        compile("org.postgresql:postgresql:42.0.0")
+        compile("org.mariadb.jdbc:mariadb-java-client:jar:2.0.2")
     }
 
     assemble {
         jar {
+            fatJar = true
         }
     }
 
