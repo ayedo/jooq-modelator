@@ -23,18 +23,15 @@ class FlywayDependentHealthChecker(databaseConfig: DatabaseConfig, healthCheckCo
 
     private val sql = healthCheckConfig.sql
 
-    private val driverDataSource = DriverDataSource(
-            this.javaClass.classLoader,
-            databaseConfig.driver,
-            databaseConfig.url,
-            databaseConfig.user,
-            databaseConfig.password,
-            null,
-            null)
+    private val driverDataSource = with(databaseConfig) {
+        DriverDataSource(this.javaClass.classLoader, driver, url, user, password, null, null)
+    }
 
     private val retryPolicy = RetryPolicy().apply {
-        withDelay(healthCheckConfig.delayMs, MILLISECONDS)
-        withMaxDuration(healthCheckConfig.maxDurationMs, MILLISECONDS)
+        val (delayMs, maxDurationMs) = healthCheckConfig
+
+        withDelay(delayMs, MILLISECONDS)
+        withMaxDuration(maxDurationMs, MILLISECONDS)
     }
 
     override fun waitForDatabase() {
