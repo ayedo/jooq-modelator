@@ -32,12 +32,12 @@ class Modelator(configuration: Configuration) {
             val existingContainers = docker.findLabeledContainers(key = dockerConfig.labelKey, value = tag)
 
             val containerId =
-                    if (existingContainers.isEmpty()) {
-                        docker.createContainer(dockerConfig.toContainerConfig()).id()!!
-                    } else {
-                        // TODO: warn if more than one found
-                        existingContainers.sortedBy({ it.created() }).map({ it.id() }).first()
-                    }
+                if (existingContainers.isEmpty()) {
+                    docker.createContainer(dockerConfig.toContainerConfig()).id()!!
+                } else {
+                    // TODO: warn if more than one found
+                    existingContainers.sortedBy({ it.created() }).map({ it.id() }).first()
+                }
 
             docker.useContainer(containerId) {
                 waitForDatabase()
