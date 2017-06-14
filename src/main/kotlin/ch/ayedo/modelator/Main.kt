@@ -22,9 +22,7 @@ class Modelator(configuration: Configuration) {
     private fun connectToDocker() = DefaultDockerClient.fromEnv().build()!!
 
     fun generate() {
-
         connectToDocker().use { docker ->
-
             val tag = dockerConfig.tag
 
             if (!docker.imageExists(tag)) {
@@ -50,14 +48,12 @@ class Modelator(configuration: Configuration) {
     }
 
     private fun waitForDatabase() {
-
         val healthChecker = HealthChecker.getDefault(databaseConfig, healthCheckConfig)
 
         healthChecker.waitForDatabase()
     }
 
     private fun migrateDatabase() {
-
         val migrator = Migrator.fromConfig(migrationConfig, databaseConfig)
 
         with(migrator) {
@@ -67,7 +63,6 @@ class Modelator(configuration: Configuration) {
     }
 
     private fun runJooqGenerator() {
-
         val jooqConfig = jooqConfigPath.toFile().readText()
 
         GenerationTool.generate(jooqConfig)
