@@ -16,6 +16,8 @@ class MetamodelGenerator(configuration: Configuration) {
 
     private val databaseConfig = configuration.databaseConfig
 
+    private val migrationConfig = configuration.migrationConfig
+
     private fun connectToDocker() = DefaultDockerClient.fromEnv().build()!!
 
     fun generate() {
@@ -46,15 +48,27 @@ class MetamodelGenerator(configuration: Configuration) {
         }
     }
 
-    fun waitForDatabase() {
-        HealthChecker.getDefault(databaseConfig, healthCheckConfig).waitForDatabase()
+    private fun waitForDatabase() {
+        val healthChecker = HealthChecker.getDefault(databaseConfig, healthCheckConfig)
+
+        healthChecker.waitForDatabase()
     }
 
     private fun migrateDatabase() {
+
+        val migrator = Migrator.fromConfig(migrationConfig, databaseConfig)
+
+        with(migrator) {
+            clean()
+            migrate()
+        }
     }
 
     private fun runJooqGenerator() {
-        GenerationTool.generate(jooqConfigPath.toFile().readText())
+
+        val jooqConfig = jooqConfigPath.toFile().readText()
+
+        GenerationTool.generate(jooqConfig)
     }
 
 }

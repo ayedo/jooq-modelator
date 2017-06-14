@@ -16,13 +16,23 @@ interface Migrator {
 
     /* applies all migrations to the database */
     fun migrate()
+
+    companion object {
+        fun fromConfig(migrationConfig: MigrationConfig, databaseConfig: DatabaseConfig) =
+                when (migrationConfig.engine) {
+                    MigrationEngine.FLYWAY -> FlywayMigrator(databaseConfig, migrationConfig.migrationsPath)
+                    MigrationEngine.LIQUIBASE -> LiquibaseMigrator(databaseConfig, migrationConfig.migrationsPath)
+                }
+    }
 }
 
-class FlywayMigrator(jdbcUrl: String, user: String, password: String, migrationsDirectory: Path) : Migrator {
+class FlywayMigrator(databaseConfig: DatabaseConfig, migrationsPath: Path) : Migrator {
 
     private val flyway = Flyway().apply {
-        setDataSource(jdbcUrl, user, password)
-        setLocations("filesystem:$migrationsDirectory")
+        with(databaseConfig) {
+            setDataSource(url, user, password)
+        }
+        setLocations("filesystem:$migrationsPath")
     }
 
     override fun clean() {
@@ -35,12 +45,14 @@ class FlywayMigrator(jdbcUrl: String, user: String, password: String, migrations
 
 }
 
-class LiquibaseMigrator(jdbcUrl: String, user: String, password: String, changelogPath: Path) : Migrator {
+class LiquibaseMigrator(databaseConfig: DatabaseConfig, changelogPath: Path) : Migrator {
 
     private val liquibase: Liquibase
 
     init {
-        val database = DatabaseFactory.getInstance().openDatabase(jdbcUrl, user, password, null, ResourceSupplier().simpleResourceAccessor)
+        val database = with(databaseConfig) {
+            DatabaseFactory.getInstance().openDatabase(url, user, password, null, ResourceSupplier().simpleResourceAccessor)
+        }
         liquibase = Liquibase(changelogPath.toString(), FileSystemResourceAccessor(), database)
     }
 
@@ -52,4 +64,5 @@ class LiquibaseMigrator(jdbcUrl: String, user: String, password: String, changel
         val nullContext: Contexts? = null
         liquibase.update(nullContext)
     }
+
 }

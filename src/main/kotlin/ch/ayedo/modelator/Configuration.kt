@@ -16,8 +16,16 @@ import javax.xml.transform.stream.StreamSource
 data class Configuration(val dockerConfig: DockerConfig,
                          val databaseConfig: DatabaseConfig,
                          val healthCheckConfig: HealthCheckConfig,
+                         val migrationConfig: MigrationConfig,
                          val migrationsPath: Path,
                          val jooqConfigPath: Path)
+
+data class MigrationConfig(val engine: MigrationEngine, val migrationsPath: Path)
+
+enum class MigrationEngine {
+    FLYWAY,
+    LIQUIBASE
+}
 
 data class DockerConfig(val tag: String,
                         val labelKey: String = "ch.ayedo.JooqMetamodelTask.tag",
