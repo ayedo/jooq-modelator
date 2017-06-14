@@ -7,12 +7,6 @@
         <password>password</password>
     </jdbc>
     <generator>
-        <database>
-            <includes>.*</includes>
-            <inputSchema>FLYWAY_TEST</inputSchema>
-            <schemaVersionProvider>SELECT :schema_name || '_' || MAX("version") FROM "schema_version"
-            </schemaVersionProvider>
-        </database>
         <target>
             <packageName>org.jooq.example.flyway.j.db.h2</packageName>
             <directory>target/generated-sources/jooq-h2-java</directory>
