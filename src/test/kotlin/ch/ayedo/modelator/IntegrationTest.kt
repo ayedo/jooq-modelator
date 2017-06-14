@@ -16,52 +16,52 @@ class IntegrationTest {
     @Test
     fun flywayPostgres() {
         Modelator(Configuration(
-                dockerConfig = DockerConfig(
-                        tag = "postgres:9.5",
-                        env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
-                        portMapping = PortMapping(5432, 5432)),
-                healthCheckConfig = HealthCheckConfig(),
-                migrationConfig = MigrationConfig(engine = FLYWAY, migrationsPath = getResourcePath("/migrations")),
-                jooqConfigPath = getResourcePath("/postgresConfiguration.xml")
+            dockerConfig = DockerConfig(
+                tag = "postgres:9.5",
+                env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
+                portMapping = PortMapping(5432, 5432)),
+            healthCheckConfig = HealthCheckConfig(),
+            migrationConfig = MigrationConfig(engine = FLYWAY, migrationsPath = getResourcePath("/migrations")),
+            jooqConfigPath = getResourcePath("/postgresConfiguration.xml")
         )).generate()
     }
 
     @Test
     fun liquibasePostgres() {
         Modelator(Configuration(
-                dockerConfig = DockerConfig(
-                        tag = "postgres:9.5",
-                        env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
-                        portMapping = PortMapping(5432, 5432)),
-                healthCheckConfig = HealthCheckConfig(),
-                migrationConfig = MigrationConfig(engine = LIQUIBASE, migrationsPath = getResourcePath("/migrations/liquibaseChangelog.xml")),
-                jooqConfigPath = getResourcePath("/postgresConfiguration.xml")
+            dockerConfig = DockerConfig(
+                tag = "postgres:9.5",
+                env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
+                portMapping = PortMapping(5432, 5432)),
+            healthCheckConfig = HealthCheckConfig(),
+            migrationConfig = MigrationConfig(engine = LIQUIBASE, migrationsPath = getResourcePath("/migrations/liquibaseChangelog.xml")),
+            jooqConfigPath = getResourcePath("/postgresConfiguration.xml")
         )).generate()
     }
 
     @Test
     fun flywayMariaDb() {
         Modelator(Configuration(
-                dockerConfig = DockerConfig(
-                        tag = "mariadb:10.3.0",
-                        env = listOf("MYSQL_DATABASE=maria", "MYSQL_ROOT_PASSWORD=pass", "MYSQL_PASSWORD=pass"),
-                        portMapping = PortMapping(3306, 3306)),
-                healthCheckConfig = HealthCheckConfig(),
-                migrationConfig = MigrationConfig(engine = FLYWAY, migrationsPath = getResourcePath("/migrations/liquibaseChangelog.xml")),
-                jooqConfigPath = getResourcePath("/mariaDbConfiguration.xml")
+            dockerConfig = DockerConfig(
+                tag = "mariadb:10.3.0",
+                env = listOf("MYSQL_DATABASE=maria", "MYSQL_ROOT_PASSWORD=pass", "MYSQL_PASSWORD=pass"),
+                portMapping = PortMapping(3306, 3306)),
+            healthCheckConfig = HealthCheckConfig(),
+            migrationConfig = MigrationConfig(engine = FLYWAY, migrationsPath = getResourcePath("/migrations/liquibaseChangelog.xml")),
+            jooqConfigPath = getResourcePath("/mariaDbConfiguration.xml")
         )).generate()
     }
 
     @Test
     fun liquibaseMariaDb() {
         Modelator(Configuration(
-                dockerConfig = DockerConfig(
-                        tag = "mariadb:10.3.0",
-                        env = listOf("MYSQL_DATABASE=maria", "MYSQL_ROOT_PASSWORD=pass", "MYSQL_PASSWORD=pass"),
-                        portMapping = PortMapping(3306, 3306)),
-                healthCheckConfig = HealthCheckConfig(),
-                migrationConfig = MigrationConfig(engine = LIQUIBASE, migrationsPath = getResourcePath("/migrations/liquibaseChangelog.xml")),
-                jooqConfigPath = getResourcePath("/mariaDbConfiguration.xml")
+            dockerConfig = DockerConfig(
+                tag = "mariadb:10.3.0",
+                env = listOf("MYSQL_DATABASE=maria", "MYSQL_ROOT_PASSWORD=pass", "MYSQL_PASSWORD=pass"),
+                portMapping = PortMapping(3306, 3306)),
+            healthCheckConfig = HealthCheckConfig(),
+            migrationConfig = MigrationConfig(engine = LIQUIBASE, migrationsPath = getResourcePath("/migrations/liquibaseChangelog.xml")),
+            jooqConfigPath = getResourcePath("/mariaDbConfiguration.xml")
         )).generate()
     }
 
