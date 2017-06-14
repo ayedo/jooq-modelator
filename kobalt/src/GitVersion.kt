@@ -23,7 +23,6 @@ fun gitDescribe(): String {
     return "$version$dirty"
 }
 
-
 fun cmd(command: String, workingDir: File = File(".")): String? {
     try {
         val parts = command.split("\\s".toRegex())
