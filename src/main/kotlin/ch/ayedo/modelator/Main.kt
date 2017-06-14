@@ -10,6 +10,8 @@ class MetamodelGenerator(configuration: Configuration) {
 
     private val dockerConfig = configuration.dockerConfig
 
+    private val healthCheckConfig = configuration.healthCheckConfig
+
     private val jooqConfigPath = configuration.jooqConfigPath
 
     private val databaseConfig = configuration.databaseConfig
@@ -44,7 +46,7 @@ class MetamodelGenerator(configuration: Configuration) {
     }
 
     fun waitForDatabase() {
-        HealthChecker.getDefault(databaseConfig).waitForDatabase()
+        HealthChecker.getDefault(databaseConfig, healthCheckConfig).waitForDatabase()
     }
 
     private fun migrateDatabase() {
