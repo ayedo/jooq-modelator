@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <jdbc>
+        <driver>org.postgresql.Driver</driver>
+        <url>jdbc:postgresql://localhost:5432/postgres?loggerLevel=OFF</url>
+        <user>postgres</user>
+        <password>secret</password>
+    </jdbc>
+    <generator>
+        <database>
+            <inputSchema>public</inputSchema>
+        </database>
+        <target>
+            <packageName>ch.ayedo.modelator.test</packageName>
+            <directory>target/generated-sources/test</directory>
+        </target>
+    </generator>
+</configuration>

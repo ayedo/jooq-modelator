@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <configuration>
     <jdbc>
-        <driver>org.postgresql.Driver</driver>
-        <url>jdbc:postgresql://localhost:5432/postgres?loggerLevel=OFF</url>
-        <user>postgres</user>
-        <password>secret</password>
+        <driver>org.mariadb.jdbc.Driver</driver>
+        <url>jdbc:mariadb://localhost:3306/maria</url>
+        <user>root</user>
+        <password>pass</password>
     </jdbc>
     <generator>
         <target>

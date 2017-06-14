@@ -16,6 +16,7 @@ val modelator = project {
         compile("org.liquibase:liquibase-core:jar:3.5.3")
         compile("org.jooq:jooq-codegen:3.9.1")
         compile("org.postgresql:postgresql:42.0.0")
+        compile("org.mariadb.jdbc:mariadb-java-client:jar:2.0.2")
         compile("org.slf4j:slf4j-simple:1.7.23")
     }
 

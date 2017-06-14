@@ -2,6 +2,7 @@ package ch.ayedo.modelator
 
 import ch.ayedo.modelator.configuration.*
 import ch.ayedo.modelator.configuration.MigrationEngine.FLYWAY
+import ch.ayedo.modelator.configuration.MigrationEngine.LIQUIBASE
 import org.testng.annotations.Test
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -12,12 +13,52 @@ class IntegrationTest {
     fun flywayPostgres() {
         MetamodelGenerator(Configuration(
                 dockerConfig = DockerConfig(
-                        tag = "postgres:9.6",
+                        tag = "postgres:9.5",
                         env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
                         portMapping = PortMapping(5432, 5432)),
                 healthCheckConfig = HealthCheckConfig(),
                 migrationConfig = MigrationConfig(engine = FLYWAY, migrationsPath = getResourcePath("/migrations")),
-                jooqConfigPath = getResourcePath("/jooqConfiguration.xml")
+                jooqConfigPath = getResourcePath("/postgresConfiguration.xml")
+        )).generate()
+    }
+
+    @Test
+    fun liquibasePostgres() {
+        MetamodelGenerator(Configuration(
+                dockerConfig = DockerConfig(
+                        tag = "postgres:9.5",
+                        env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
+                        portMapping = PortMapping(5432, 5432)),
+                healthCheckConfig = HealthCheckConfig(),
+                migrationConfig = MigrationConfig(engine = LIQUIBASE, migrationsPath = getResourcePath("/migrations/liquibaseChangelog.xml")),
+                jooqConfigPath = getResourcePath("/postgresConfiguration.xml")
+        )).generate()
+    }
+
+
+    @Test
+    fun flywayMariaDb() {
+        MetamodelGenerator(Configuration(
+                dockerConfig = DockerConfig(
+                        tag = "mariadb:10.3.0",
+                        env = listOf("MYSQL_DATABASE=maria", "MYSQL_ROOT_PASSWORD=pass", "MYSQL_PASSWORD=pass"),
+                        portMapping = PortMapping(3306, 3306)),
+                healthCheckConfig = HealthCheckConfig(),
+                migrationConfig = MigrationConfig(engine = FLYWAY, migrationsPath = getResourcePath("/migrations/liquibaseChangelog.xml")),
+                jooqConfigPath = getResourcePath("/mariaDbConfiguration.xml")
+        )).generate()
+    }
+
+    @Test
+    fun liquibaseMariaDb() {
+        MetamodelGenerator(Configuration(
+                dockerConfig = DockerConfig(
+                        tag = "mariadb:10.3.0",
+                        env = listOf("MYSQL_DATABASE=maria", "MYSQL_ROOT_PASSWORD=pass", "MYSQL_PASSWORD=pass"),
+                        portMapping = PortMapping(3306, 3306)),
+                healthCheckConfig = HealthCheckConfig(),
+                migrationConfig = MigrationConfig(engine = LIQUIBASE, migrationsPath = getResourcePath("/migrations/liquibaseChangelog.xml")),
+                jooqConfigPath = getResourcePath("/mariaDbConfiguration.xml")
         )).generate()
     }
 
