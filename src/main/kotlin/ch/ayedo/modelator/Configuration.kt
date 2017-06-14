@@ -14,6 +14,7 @@ import javax.xml.transform.stream.StreamSource
 
 
 data class Configuration(val dockerConfig: DockerConfig,
+                         val databaseConfig: DatabaseConfig,
                          val migrationsPath: Path,
                          val jooqConfigPath: Path)
 
@@ -50,7 +51,7 @@ data class PortMapping(val host: Int, val container: Int)
 @XmlAccessorType(XmlAccessType.FIELD)
 class DatabaseConfig {
 
-    lateinit var driver: String
+    var driver: String? = null
     lateinit var url: String
     lateinit var user: String
     lateinit var password: String
