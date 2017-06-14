@@ -11,7 +11,7 @@ class IntegrationTest {
 
     @Test
     fun flywayPostgres() {
-        MetamodelGenerator(Configuration(
+        Modelator(Configuration(
                 dockerConfig = DockerConfig(
                         tag = "postgres:9.5",
                         env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
@@ -24,7 +24,7 @@ class IntegrationTest {
 
     @Test
     fun liquibasePostgres() {
-        MetamodelGenerator(Configuration(
+        Modelator(Configuration(
                 dockerConfig = DockerConfig(
                         tag = "postgres:9.5",
                         env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
@@ -38,7 +38,7 @@ class IntegrationTest {
 
     @Test
     fun flywayMariaDb() {
-        MetamodelGenerator(Configuration(
+        Modelator(Configuration(
                 dockerConfig = DockerConfig(
                         tag = "mariadb:10.3.0",
                         env = listOf("MYSQL_DATABASE=maria", "MYSQL_ROOT_PASSWORD=pass", "MYSQL_PASSWORD=pass"),
@@ -51,7 +51,7 @@ class IntegrationTest {
 
     @Test
     fun liquibaseMariaDb() {
-        MetamodelGenerator(Configuration(
+        Modelator(Configuration(
                 dockerConfig = DockerConfig(
                         tag = "mariadb:10.3.0",
                         env = listOf("MYSQL_DATABASE=maria", "MYSQL_ROOT_PASSWORD=pass", "MYSQL_PASSWORD=pass"),

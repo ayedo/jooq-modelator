@@ -8,7 +8,7 @@ import org.jooq.util.GenerationTool
 
 // TODO: main method which takes a path to a configuration file
 
-class MetamodelGenerator(configuration: Configuration) {
+class Modelator(configuration: Configuration) {
 
     private val dockerConfig = configuration.dockerConfig
 
