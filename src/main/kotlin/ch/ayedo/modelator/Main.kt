@@ -21,6 +21,7 @@ class MetamodelGenerator(configuration: Configuration) {
     fun generate() {
 
         connectToDocker().use { docker ->
+
             val tag = dockerConfig.tag
 
             if (!docker.imageExists(tag)) {
