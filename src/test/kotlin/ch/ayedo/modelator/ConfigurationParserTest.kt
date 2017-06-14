@@ -1,5 +1,6 @@
 package ch.ayedo.modelator
 
+import ch.ayedo.modelator.configuration.DatabaseConfig
 import org.testng.annotations.Test
 
 class ConfigurationParserTest {

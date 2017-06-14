@@ -1,5 +1,8 @@
 package ch.ayedo.modelator
 
+import ch.ayedo.modelator.configuration.DatabaseConfig
+import ch.ayedo.modelator.configuration.MigrationConfig
+import ch.ayedo.modelator.configuration.MigrationEngine
 import liquibase.Contexts
 import liquibase.Liquibase
 import liquibase.database.DatabaseFactory

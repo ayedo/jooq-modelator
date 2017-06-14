@@ -1,5 +1,7 @@
 package ch.ayedo.modelator
 
+import ch.ayedo.modelator.configuration.DatabaseConfig
+import ch.ayedo.modelator.configuration.HealthCheckConfig
 import net.jodah.failsafe.Failsafe
 import net.jodah.failsafe.RetryPolicy
 import org.flywaydb.core.internal.util.jdbc.DriverDataSource

@@ -1,5 +1,7 @@
 package ch.ayedo.modelator
 
+import ch.ayedo.modelator.configuration.Configuration
+import ch.ayedo.modelator.configuration.DatabaseConfig
 import com.spotify.docker.client.DefaultDockerClient
 import org.jooq.util.GenerationTool
 
@@ -14,7 +16,7 @@ class MetamodelGenerator(configuration: Configuration) {
 
     private val jooqConfigPath = configuration.jooqConfigPath
 
-    private val databaseConfig = configuration.databaseConfig
+    private val databaseConfig = DatabaseConfig.fromJooqConfig(jooqConfigPath)
 
     private val migrationConfig = configuration.migrationConfig
 

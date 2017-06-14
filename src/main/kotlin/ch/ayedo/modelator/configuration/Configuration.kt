@@ -1,20 +1,12 @@
-package ch.ayedo.modelator
+package ch.ayedo.modelator.configuration
 
 import com.spotify.docker.client.messages.ContainerConfig
 import com.spotify.docker.client.messages.HostConfig
 import com.spotify.docker.client.messages.PortBinding
-import java.net.URI
 import java.nio.file.Path
-import java.nio.file.Paths
-import javax.xml.bind.JAXBContext
-import javax.xml.bind.annotation.XmlAccessType
-import javax.xml.bind.annotation.XmlAccessorType
-import javax.xml.stream.XMLInputFactory
-import javax.xml.transform.stream.StreamSource
 
 
 data class Configuration(val dockerConfig: DockerConfig,
-                         val databaseConfig: DatabaseConfig,
                          val healthCheckConfig: HealthCheckConfig,
                          val migrationConfig: MigrationConfig,
                          val migrationsPath: Path,
@@ -57,42 +49,5 @@ data class DockerConfig(val tag: String,
 
 data class PortMapping(val host: Int, val container: Int)
 
-@XmlAccessorType(XmlAccessType.FIELD)
-class DatabaseConfig {
-
-    var driver: String? = null
-    lateinit var url: String
-    lateinit var user: String
-    lateinit var password: String
-
-    companion object {
-
-        fun fromJooqConfig(jooqConfigUri: URI) = fromJooqConfig(Paths.get(jooqConfigUri))
-
-        fun fromJooqConfig(jooqConfigPath: Path): DatabaseConfig {
-
-            val xmlStreamReader = XMLInputFactory.newFactory().let { factory ->
-                val source = StreamSource(jooqConfigPath.toFile())
-                factory.createXMLStreamReader(source)
-            }
-
-            try {
-                xmlStreamReader.nextTag()
-
-                while (xmlStreamReader.localName != "jdbc") {
-                    xmlStreamReader.nextTag()
-                }
-
-                val unmarshaller = JAXBContext.newInstance(DatabaseConfig::class.java).createUnmarshaller()
-                val jb = unmarshaller.unmarshal(xmlStreamReader, DatabaseConfig::class.java)
-
-                return jb.value
-
-            } finally {
-                xmlStreamReader.close()
-            }
-        }
-    }
-}
 
 data class HealthCheckConfig(val delayMs: Long = 500, val maxDurationMs: Long = 20000, val sql: String = "SELECT 1")
