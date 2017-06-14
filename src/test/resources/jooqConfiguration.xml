@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <jdbc>
+        <driver>driver</driver>
+        <url>url</url>
+        <user>user</user>
+        <password>password</password>
+    </jdbc>
+    <generator>
+        <database>
+            <includes>.*</includes>
+            <inputSchema>FLYWAY_TEST</inputSchema>
+            <schemaVersionProvider>SELECT :schema_name || '_' || MAX("version") FROM "schema_version"
+            </schemaVersionProvider>
+        </database>
+        <target>
+            <packageName>org.jooq.example.flyway.j.db.h2</packageName>
+            <directory>target/generated-sources/jooq-h2-java</directory>
+        </target>
+    </generator>
+</configuration>
