@@ -1,6 +1,7 @@
 package ch.ayedo.modelator
 
 import com.spotify.docker.client.DockerClient
+import com.spotify.docker.client.DockerClient.ListContainersParam.allContainers
 import com.spotify.docker.client.DockerClient.ListImagesParam.byName
 
 
@@ -19,7 +20,7 @@ fun <T> DockerClient.useContainer(containerId: String, fn: () -> T) =
         }
 
 fun DockerClient.findLabeledContainers(key: String, value: String) =
-        this.listContainers(DockerClient.ListContainersParam.allContainers())
+        this.listContainers(allContainers())
                 .filter({ container ->
                     container.labels()?.get(key) == value
                 })
