@@ -1,21 +1,20 @@
 package ch.ayedo.modelator
 
 import com.spotify.docker.client.DefaultDockerClient
-import net.jodah.failsafe.RetryPolicy
-import java.util.concurrent.TimeUnit.MILLISECONDS
-import java.util.concurrent.TimeUnit.SECONDS
+import org.jooq.util.GenerationTool
+
+
+// TODO: main method which takes a path to a configuration file
 
 class MetamodelGenerator(configuration: Configuration) {
 
     private val dockerConfig = configuration.dockerConfig
 
-    companion object {
-        private val retryPolicy = RetryPolicy()
-                .withDelay(500, MILLISECONDS)
-                .withMaxDuration(20, SECONDS)
-    }
+    private val jooqConfigPath = configuration.jooqConfigPath
 
-    fun connectToDocker() = DefaultDockerClient.fromEnv().build()!!
+    private val databaseConfig = configuration.databaseConfig
+
+    private fun connectToDocker() = DefaultDockerClient.fromEnv().build()!!
 
     fun generate() {
 
@@ -37,8 +36,22 @@ class MetamodelGenerator(configuration: Configuration) {
                     }
 
             docker.useContainer(containerId) {
-
+                waitForDatabase()
+                migrateDatabase()
+                runJooqGenerator()
             }
         }
     }
+
+    fun waitForDatabase() {
+        HealthChecker.getDefault(databaseConfig).waitForDatabase()
+    }
+
+    private fun migrateDatabase() {
+    }
+
+    private fun runJooqGenerator() {
+        GenerationTool.generate(jooqConfigPath.toFile().readText())
+    }
+
 }
