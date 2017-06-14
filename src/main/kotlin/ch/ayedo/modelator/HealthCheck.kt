@@ -4,7 +4,7 @@ import net.jodah.failsafe.Failsafe
 import net.jodah.failsafe.RetryPolicy
 import org.flywaydb.core.internal.util.jdbc.DriverDataSource
 import org.flywaydb.core.internal.util.jdbc.JdbcUtils.openConnection
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeUnit.MILLISECONDS
 
 interface HealthChecker {
 
@@ -12,12 +12,16 @@ interface HealthChecker {
     fun waitForDatabase()
 
     companion object {
-        fun getDefault(databaseConfig: DatabaseConfig) = FlywayDependentHealthChecker(databaseConfig)
+        fun getDefault(databaseConfig: DatabaseConfig, healthCheckConfig: HealthCheckConfig): HealthChecker {
+            return FlywayDependentHealthChecker(databaseConfig, healthCheckConfig)
+        }
     }
 }
 
 /* uses Flyway's exposed JDBC tooling to connect to the database */
-class FlywayDependentHealthChecker(databaseConfig: DatabaseConfig) : HealthChecker {
+class FlywayDependentHealthChecker(databaseConfig: DatabaseConfig, healthCheckConfig: HealthCheckConfig) : HealthChecker {
+
+    private val sql = healthCheckConfig.sql
 
     private val driverDataSource = DriverDataSource(
             this.javaClass.classLoader,
@@ -28,16 +32,16 @@ class FlywayDependentHealthChecker(databaseConfig: DatabaseConfig) : HealthCheck
             null,
             null)
 
-    private val retryPolicy = RetryPolicy()
-            .withDelay(500, TimeUnit.MILLISECONDS)
-            .withMaxDuration(20, TimeUnit.SECONDS)
+    private val retryPolicy = RetryPolicy().apply {
+        withDelay(healthCheckConfig.delayMs, MILLISECONDS)
+        withMaxDuration(healthCheckConfig.maxDurationMs, MILLISECONDS)
+    }
 
     override fun waitForDatabase() {
         Failsafe.with<RetryPolicy>(retryPolicy).run { ->
 
             openConnection(driverDataSource).use {
-                // TODO: we could use a case statement, to be more general
-                it.createStatement().execute("SELECT 1")
+                it.createStatement().execute(sql)
             }
         }
     }

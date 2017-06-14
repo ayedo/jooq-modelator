@@ -15,6 +15,7 @@ import javax.xml.transform.stream.StreamSource
 
 data class Configuration(val dockerConfig: DockerConfig,
                          val databaseConfig: DatabaseConfig,
+                         val healthCheckConfig: HealthCheckConfig,
                          val migrationsPath: Path,
                          val jooqConfigPath: Path)
 
@@ -85,3 +86,5 @@ class DatabaseConfig {
         }
     }
 }
+
+data class HealthCheckConfig(val delayMs: Long = 500, val maxDurationMs: Long = 20000, val sql: String = "SELECT 1")
