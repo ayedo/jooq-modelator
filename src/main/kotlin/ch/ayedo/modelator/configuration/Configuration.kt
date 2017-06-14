@@ -9,7 +9,6 @@ import java.nio.file.Path
 data class Configuration(val dockerConfig: DockerConfig,
                          val healthCheckConfig: HealthCheckConfig,
                          val migrationConfig: MigrationConfig,
-                         val migrationsPath: Path,
                          val jooqConfigPath: Path)
 
 data class MigrationConfig(val engine: MigrationEngine, val migrationsPath: Path)

@@ -15,6 +15,8 @@ val modelator = project {
         compile("org.flywaydb:flyway-core:4.1.2")
         compile("org.liquibase:liquibase-core:jar:3.5.3")
         compile("org.jooq:jooq-codegen:3.9.1")
+        compile("org.postgresql:postgresql:42.0.0")
+        compile("org.slf4j:slf4j-simple:1.7.23")
     }
 
     dependenciesTest {

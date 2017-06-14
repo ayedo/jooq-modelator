@@ -1,8 +1,6 @@
 package ch.ayedo.modelator.configuration
 
-import java.net.URI
 import java.nio.file.Path
-import java.nio.file.Paths
 import javax.xml.bind.JAXBContext
 import javax.xml.bind.annotation.XmlAccessType
 import javax.xml.bind.annotation.XmlAccessorType
@@ -19,8 +17,6 @@ class DatabaseConfig {
     lateinit var password: String
 
     companion object {
-
-        fun fromJooqConfig(jooqConfigUri: URI) = fromJooqConfig(Paths.get(jooqConfigUri))
 
         fun fromJooqConfig(jooqConfigPath: Path): DatabaseConfig {
 

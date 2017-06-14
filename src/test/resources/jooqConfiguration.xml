@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <configuration>
     <jdbc>
-        <driver>driver</driver>
-        <url>url</url>
-        <user>user</user>
-        <password>password</password>
+        <driver>org.postgresql.Driver</driver>
+        <url>jdbc:postgresql://localhost:5432/postgres?loggerLevel=OFF</url>
+        <user>postgres</user>
+        <password>secret</password>
     </jdbc>
     <generator>
         <target>
-            <packageName>org.jooq.example.flyway.j.db.h2</packageName>
-            <directory>target/generated-sources/jooq-h2-java</directory>
+            <packageName>ch.ayedo.modelator.test</packageName>
+            <directory>target/generated-sources/test</directory>
         </target>
     </generator>
 </configuration>
