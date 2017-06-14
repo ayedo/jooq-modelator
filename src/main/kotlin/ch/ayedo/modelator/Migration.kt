@@ -2,7 +2,8 @@ package ch.ayedo.modelator
 
 import ch.ayedo.modelator.configuration.DatabaseConfig
 import ch.ayedo.modelator.configuration.MigrationConfig
-import ch.ayedo.modelator.configuration.MigrationEngine
+import ch.ayedo.modelator.configuration.MigrationEngine.FLYWAY
+import ch.ayedo.modelator.configuration.MigrationEngine.LIQUIBASE
 import liquibase.Contexts
 import liquibase.Liquibase
 import liquibase.database.DatabaseFactory
@@ -23,8 +24,8 @@ interface Migrator {
     companion object {
         fun fromConfig(migrationConfig: MigrationConfig, databaseConfig: DatabaseConfig) =
                 when (migrationConfig.engine) {
-                    MigrationEngine.FLYWAY -> FlywayMigrator(databaseConfig, migrationConfig.migrationsPath)
-                    MigrationEngine.LIQUIBASE -> LiquibaseMigrator(databaseConfig, migrationConfig.migrationsPath)
+                    FLYWAY -> FlywayMigrator(databaseConfig, migrationConfig.migrationsPath)
+                    LIQUIBASE -> LiquibaseMigrator(databaseConfig, migrationConfig.migrationsPath)
                 }
     }
 }
