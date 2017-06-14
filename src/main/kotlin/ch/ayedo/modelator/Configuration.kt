@@ -33,7 +33,7 @@ data class DockerConfig(val tag: String,
                         val portMapping: PortMapping) {
 
     fun toContainerConfig(): ContainerConfig? {
-        val hostConfig = createHostConfig(portMapping)
+        val hostConfig = createHostConfig()
 
         return ContainerConfig.builder()
                 .hostConfig(hostConfig)
@@ -44,7 +44,7 @@ data class DockerConfig(val tag: String,
                 .build()
     }
 
-    private fun createHostConfig(portMapping: PortMapping): HostConfig {
+    private fun createHostConfig(): HostConfig {
 
         val defaultPortBinding: PortBinding = PortBinding.of("0.0.0.0", portMapping.container)
         val portBindings = mapOf(portMapping.host.toString() to listOf(defaultPortBinding))
