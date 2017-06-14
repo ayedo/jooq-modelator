@@ -5,7 +5,6 @@ import com.spotify.docker.client.messages.HostConfig
 import com.spotify.docker.client.messages.PortBinding
 import java.nio.file.Path
 
-
 data class Configuration(val dockerConfig: DockerConfig,
                          val healthCheckConfig: HealthCheckConfig,
                          val migrationConfig: MigrationConfig,
@@ -47,6 +46,5 @@ data class DockerConfig(val tag: String,
 }
 
 data class PortMapping(val host: Int, val container: Int)
-
 
 data class HealthCheckConfig(val delayMs: Long = 500, val maxDurationMs: Long = 20000, val sql: String = "SELECT 1")

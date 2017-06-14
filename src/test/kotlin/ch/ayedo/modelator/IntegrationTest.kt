@@ -1,8 +1,12 @@
 package ch.ayedo.modelator
 
-import ch.ayedo.modelator.configuration.*
+import ch.ayedo.modelator.configuration.Configuration
+import ch.ayedo.modelator.configuration.DockerConfig
+import ch.ayedo.modelator.configuration.HealthCheckConfig
+import ch.ayedo.modelator.configuration.MigrationConfig
 import ch.ayedo.modelator.configuration.MigrationEngine.FLYWAY
 import ch.ayedo.modelator.configuration.MigrationEngine.LIQUIBASE
+import ch.ayedo.modelator.configuration.PortMapping
 import org.testng.annotations.Test
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -34,7 +38,6 @@ class IntegrationTest {
                 jooqConfigPath = getResourcePath("/postgresConfiguration.xml")
         )).generate()
     }
-
 
     @Test
     fun flywayMariaDb() {

@@ -12,7 +12,6 @@ import liquibase.sdk.supplier.resource.ResourceSupplier
 import org.flywaydb.core.Flyway
 import java.nio.file.Path
 
-
 interface Migrator {
 
     /* deletes all objects in the database */
@@ -23,10 +22,10 @@ interface Migrator {
 
     companion object {
         fun fromConfig(migrationConfig: MigrationConfig, databaseConfig: DatabaseConfig) =
-                when (migrationConfig.engine) {
-                    FLYWAY -> FlywayMigrator(databaseConfig, migrationConfig.migrationsPath)
-                    LIQUIBASE -> LiquibaseMigrator(databaseConfig, migrationConfig.migrationsPath)
-                }
+            when (migrationConfig.engine) {
+                FLYWAY -> FlywayMigrator(databaseConfig, migrationConfig.migrationsPath)
+                LIQUIBASE -> LiquibaseMigrator(databaseConfig, migrationConfig.migrationsPath)
+            }
     }
 }
 

@@ -5,7 +5,6 @@ import ch.ayedo.modelator.configuration.DatabaseConfig
 import com.spotify.docker.client.DefaultDockerClient
 import org.jooq.util.GenerationTool
 
-
 // TODO: main method which takes a path to a configuration file
 
 class Modelator(configuration: Configuration) {
