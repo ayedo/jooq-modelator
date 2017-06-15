@@ -1,0 +1,30 @@
+
+plugins {
+    id 'application'
+    id 'org.jetbrains.kotlin.jvm' version '1.1.2-5'
+}
+
+group 'ch.ayedo'
+version '1.0-SNAPSHOT'
+mainClassName = 'ch.ayedo.modelator.MainKt'
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    compile("org.jetbrains.kotlin:kotlin-stdlib-jre8:1.1.2-5")
+    compile("net.jodah:failsafe:0.9.1")
+    compile("com.spotify:docker-client:8.1.2")
+    compile("org.flywaydb:flyway-core:4.1.2")
+    compile("org.liquibase:liquibase-core:3.5.3")
+    compile("org.jooq:jooq-codegen:3.9.1")
+    compile("org.postgresql:postgresql:42.0.0")
+    compile("org.mariadb.jdbc:mariadb-java-client:2.0.2")
+    compile("org.slf4j:slf4j-simple:1.7.23")
+
+    testCompile("org.testng:testng:6.11")
+    testCompile("org.postgresql:postgresql:42.0.0")
+    testCompile("org.mariadb.jdbc:mariadb-java-client:2.0.2")
+}
