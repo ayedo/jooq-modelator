@@ -1,12 +1,13 @@
 package ch.ayedo.modelator
 
-import ch.ayedo.modelator.configuration.Configuration
-import ch.ayedo.modelator.configuration.DockerConfig
-import ch.ayedo.modelator.configuration.HealthCheckConfig
-import ch.ayedo.modelator.configuration.MigrationConfig
-import ch.ayedo.modelator.configuration.MigrationEngine.FLYWAY
-import ch.ayedo.modelator.configuration.MigrationEngine.LIQUIBASE
-import ch.ayedo.modelator.configuration.PortMapping
+import ch.ayedo.modelator.core.configuration.Configuration
+import ch.ayedo.modelator.core.configuration.DockerConfig
+import ch.ayedo.modelator.core.configuration.HealthCheckConfig
+import ch.ayedo.modelator.core.configuration.MigrationConfig
+import ch.ayedo.modelator.core.configuration.MigrationEngine.FLYWAY
+import ch.ayedo.modelator.core.configuration.MigrationEngine.LIQUIBASE
+import ch.ayedo.modelator.core.configuration.PortMapping
+import ch.ayedo.modelator.core.Modelator
 import org.testng.annotations.Test
 import java.nio.file.Path
 import java.nio.file.Paths

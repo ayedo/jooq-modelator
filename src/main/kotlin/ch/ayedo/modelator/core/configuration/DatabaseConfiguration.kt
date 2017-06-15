@@ -1,14 +1,12 @@
-package ch.ayedo.modelator.configuration
+package ch.ayedo.modelator.core.configuration
 
 import java.nio.file.Path
 import javax.xml.bind.JAXBContext
-import javax.xml.bind.annotation.XmlAccessType
-import javax.xml.bind.annotation.XmlAccessorType
 import javax.xml.stream.XMLInputFactory
 import javax.xml.transform.stream.StreamSource
 
 /** The database configuration is loaded from the jooq configuration file */
-@XmlAccessorType(XmlAccessType.FIELD)
+@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)
 class DatabaseConfig {
 
     var driver: String? = null

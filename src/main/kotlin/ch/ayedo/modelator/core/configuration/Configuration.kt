@@ -1,4 +1,4 @@
-package ch.ayedo.modelator.configuration
+package ch.ayedo.modelator.core.configuration
 
 import com.spotify.docker.client.messages.ContainerConfig
 import com.spotify.docker.client.messages.HostConfig

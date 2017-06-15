@@ -1,4 +1,4 @@
-package ch.ayedo.modelator
+package ch.ayedo.modelator.core
 
 import com.spotify.docker.client.DockerClient
 import com.spotify.docker.client.DockerClient.ListContainersParam.allContainers
