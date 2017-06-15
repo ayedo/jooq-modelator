@@ -10,9 +10,9 @@ val bs = buildScript {
     buildFileClasspath("org.eclipse.jgit:org.eclipse.jgit:jar:4.7.0.201704051617-r")
 }
 
-fun gitDescribe(): String {
+fun gitVersion(): String {
     val version =
-        cmd("git describe --tags --always --first-parent")
+        cmd("git describe --tags --always --first-parent")?.trim('\n')
             ?: "UNKNOWN${UUID.randomUUID()}"
 
     val repo = RepositoryBuilder().findGitDir().build()

@@ -6,7 +6,7 @@ val modelator = project {
     name = "modelator"
     group = "ch.ayedo"
     artifactId = name
-    version = gitDescribe()
+    version = gitVersion()
 
     dependencies {
         compile("org.jetbrains.kotlin:kotlin-stdlib-jre7:1.1.2-4")
