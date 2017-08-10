@@ -18,7 +18,7 @@ enum class MigrationEngine {
 }
 
 data class DockerConfig(val tag: String,
-                        val labelKey: String = "ch.ayedo.JooqMetamodelTask.tag",
+                        val labelKey: String = "ch.ayedo.modelator.tag",
                         val env: List<String>,
                         val portMapping: PortMapping) {
 

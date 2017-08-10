@@ -1,12 +1,9 @@
-
 plugins {
-    id 'application'
     id 'org.jetbrains.kotlin.jvm' version '1.1.2-5'
 }
 
 group 'ch.ayedo'
 version '1.0-SNAPSHOT'
-mainClassName = 'ch.ayedo.modelator.MainKt'
 
 repositories {
     jcenter()
@@ -14,6 +11,8 @@ repositories {
 }
 
 dependencies {
+    compile gradleApi()
+
     compile("org.jetbrains.kotlin:kotlin-stdlib-jre8:1.1.2-5")
     compile("net.jodah:failsafe:0.9.1")
     compile("com.spotify:docker-client:8.1.2")
