@@ -16,7 +16,6 @@ import java.nio.file.Path
 
 open class ModelatorTask : DefaultTask() {
 
-
     @InputFile
     lateinit var jooqConfigPath: Path
 
