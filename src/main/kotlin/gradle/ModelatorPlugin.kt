@@ -11,7 +11,7 @@ open class ModelatorPlugin : Plugin<Project> {
 
         project.afterEvaluate({
 
-            val config = project.extensions.findByType(ModelatorExtension::class.java)
+            val config = project.extensions.findByType(ModelatorExtension::class.java)!!
 
             project.tasks.create("generateMetamodel", ModelatorTask::class.java).apply {
                 jooqConfigPath = config.jooqConfigPath
