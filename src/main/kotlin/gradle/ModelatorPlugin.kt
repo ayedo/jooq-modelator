@@ -7,7 +7,7 @@ open class ModelatorPlugin : Plugin<Project> {
 
     override fun apply(project: Project) {
 
-        project.extensions?.create("modelator", ModelatorExtension::class.java)
+        project.extensions.create("modelator", ModelatorExtension::class.java)
 
         project.afterEvaluate({
 
