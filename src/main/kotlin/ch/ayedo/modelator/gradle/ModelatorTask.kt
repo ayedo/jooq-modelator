@@ -1,4 +1,4 @@
-package gradle
+package ch.ayedo.modelator.gradle
 
 import ch.ayedo.modelator.core.Modelator
 import ch.ayedo.modelator.core.configuration.Configuration
