@@ -1,5 +1,3 @@
 CREATE TABLE tab (
-  col TEXT PRIMARY KEY
+  col INTEGER PRIMARY KEY
 );
-
-INSERT INTO tab (col) VALUES ('test');

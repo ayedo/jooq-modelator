@@ -1,9 +1,9 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.1.2-5'
+    id "org.jetbrains.kotlin.jvm" version "1.2.61"
 }
 
-group 'ch.ayedo'
-version '1.0-SNAPSHOT'
+group "ch.ayedo"
+version "1.0-SNAPSHOT"
 
 repositories {
     jcenter()
@@ -13,17 +13,17 @@ repositories {
 dependencies {
     compile gradleApi()
 
-    compile("org.jetbrains.kotlin:kotlin-stdlib-jre8:1.1.2-5")
-    compile("net.jodah:failsafe:0.9.1")
-    compile("com.spotify:docker-client:8.1.2")
-    compile("org.flywaydb:flyway-core:4.1.2")
-    compile("org.liquibase:liquibase-core:3.5.3")
-    compile("org.jooq:jooq-codegen:3.9.1")
-    compile("org.postgresql:postgresql:42.0.0")
-    compile("org.mariadb.jdbc:mariadb-java-client:2.0.2")
-    compile("org.slf4j:slf4j-simple:1.7.23")
+    compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    compile("net.jodah:failsafe:1.1.0")
+    compile("com.spotify:docker-client:8.11.7")
+    compile("org.flywaydb:flyway-core:5.1.4")
+    compile("org.liquibase:liquibase-core:3.6.2")
+    compile("org.jooq:jooq-codegen:3.11.4")
+    compile("org.postgresql:postgresql:42.2.4")
+    compile("org.mariadb.jdbc:mariadb-java-client:2.2.6")
+    compile("org.slf4j:slf4j-simple:1.7.25")
 
     testCompile("org.testng:testng:6.11")
-    testCompile("org.postgresql:postgresql:42.0.0")
-    testCompile("org.mariadb.jdbc:mariadb-java-client:2.0.2")
+    testCompile("org.postgresql:postgresql:42.2.4")
+    testCompile("org.mariadb.jdbc:mariadb-java-client:2.2.6")
 }

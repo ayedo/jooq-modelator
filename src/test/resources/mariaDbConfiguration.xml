@@ -7,6 +7,9 @@
         <password>pass</password>
     </jdbc>
     <generator>
+        <database>
+            <name>org.jooq.meta.mariadb.MariaDBDatabase</name>
+        </database>
         <target>
             <packageName>ch.ayedo.modelator.test</packageName>
             <directory>target/generated-sources/test</directory>

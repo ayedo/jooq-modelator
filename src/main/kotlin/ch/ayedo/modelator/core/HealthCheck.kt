@@ -2,6 +2,7 @@ package ch.ayedo.modelator.core
 
 import ch.ayedo.modelator.core.configuration.DatabaseConfig
 import ch.ayedo.modelator.core.configuration.HealthCheckConfig
+import net.jodah.failsafe.Failsafe
 import net.jodah.failsafe.RetryPolicy
 import org.flywaydb.core.internal.util.jdbc.DriverDataSource
 import org.flywaydb.core.internal.util.jdbc.JdbcUtils.openConnection
@@ -36,7 +37,8 @@ class FlywayDependentHealthChecker(databaseConfig: DatabaseConfig, healthCheckCo
     }
 
     override fun waitForDatabase() {
-        net.jodah.failsafe.Failsafe.with<net.jodah.failsafe.RetryPolicy>(retryPolicy).run {
+
+        net.jodah.failsafe.Failsafe.with<net.jodah.failsafe.RetryPolicy>(retryPolicy).run { ->
 
             openConnection(driverDataSource).use {
                 it.createStatement().execute(sql)

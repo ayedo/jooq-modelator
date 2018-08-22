@@ -44,11 +44,11 @@ class IntegrationTest {
     fun flywayMariaDb() {
         Modelator(Configuration(
             dockerConfig = DockerConfig(
-                tag = "mariadb:10.3.0",
+                tag = "mariadb:10.2",
                 env = listOf("MYSQL_DATABASE=maria", "MYSQL_ROOT_PASSWORD=pass", "MYSQL_PASSWORD=pass"),
                 portMapping = PortMapping(3306, 3306)),
             healthCheckConfig = HealthCheckConfig(),
-            migrationConfig = MigrationConfig(engine = FLYWAY, migrationsPath = getResourcePath("/migrations/liquibaseChangelog.xml")),
+            migrationConfig = MigrationConfig(engine = FLYWAY, migrationsPath = getResourcePath("/migrations")),
             jooqConfigPath = getResourcePath("/mariaDbConfiguration.xml")
         )).generate()
     }
@@ -57,7 +57,7 @@ class IntegrationTest {
     fun liquibaseMariaDb() {
         Modelator(Configuration(
             dockerConfig = DockerConfig(
-                tag = "mariadb:10.3.0",
+                tag = "mariadb:10.2",
                 env = listOf("MYSQL_DATABASE=maria", "MYSQL_ROOT_PASSWORD=pass", "MYSQL_PASSWORD=pass"),
                 portMapping = PortMapping(3306, 3306)),
             healthCheckConfig = HealthCheckConfig(),

@@ -3,7 +3,7 @@ package ch.ayedo.modelator.core
 import ch.ayedo.modelator.core.configuration.Configuration
 import ch.ayedo.modelator.core.configuration.DatabaseConfig
 import com.spotify.docker.client.DefaultDockerClient
-import org.jooq.util.GenerationTool
+import org.jooq.codegen.GenerationTool
 
 class Modelator(configuration: Configuration) {
 
@@ -13,7 +13,7 @@ class Modelator(configuration: Configuration) {
 
     private val jooqConfigPath = configuration.jooqConfigPath
 
-    private val databaseConfig = DatabaseConfig.Companion.fromJooqConfig(jooqConfigPath)
+    private val databaseConfig = DatabaseConfig.fromJooqConfig(jooqConfigPath)
 
     private val migrationConfig = configuration.migrationConfig
 
