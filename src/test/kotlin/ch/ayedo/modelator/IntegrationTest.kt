@@ -25,6 +25,8 @@ class IntegrationTest {
             migrationConfig = MigrationConfig(engine = FLYWAY, migrationsPath = getResourcePath("/migrations")),
             jooqConfigPath = getResourcePath("/postgresConfiguration.xml")
         )).generate()
+
+        // TODO: check generated files
     }
 
     @Test
@@ -38,6 +40,8 @@ class IntegrationTest {
             migrationConfig = MigrationConfig(engine = LIQUIBASE, migrationsPath = getResourcePath("/migrations/liquibaseChangelog.xml")),
             jooqConfigPath = getResourcePath("/postgresConfiguration.xml")
         )).generate()
+
+        // TODO: check generated files
     }
 
     @Test
@@ -51,6 +55,8 @@ class IntegrationTest {
             migrationConfig = MigrationConfig(engine = FLYWAY, migrationsPath = getResourcePath("/migrations")),
             jooqConfigPath = getResourcePath("/mariaDbConfiguration.xml")
         )).generate()
+
+        // TODO: check generated files
     }
 
     @Test
@@ -64,6 +70,8 @@ class IntegrationTest {
             migrationConfig = MigrationConfig(engine = LIQUIBASE, migrationsPath = getResourcePath("/migrations/liquibaseChangelog.xml")),
             jooqConfigPath = getResourcePath("/mariaDbConfiguration.xml")
         )).generate()
+
+        // TODO: check generated files
     }
 
     private fun getResourcePath(path: String): Path = Paths.get(this.javaClass.getResource(path).toURI())
