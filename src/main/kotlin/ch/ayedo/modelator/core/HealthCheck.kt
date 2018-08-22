@@ -36,7 +36,7 @@ class FlywayDependentHealthChecker(databaseConfig: DatabaseConfig, healthCheckCo
     }
 
     override fun waitForDatabase() {
-        net.jodah.failsafe.Failsafe.with<net.jodah.failsafe.RetryPolicy>(retryPolicy).run { ->
+        net.jodah.failsafe.Failsafe.with<net.jodah.failsafe.RetryPolicy>(retryPolicy).run {
 
             openConnection(driverDataSource).use {
                 it.createStatement().execute(sql)
