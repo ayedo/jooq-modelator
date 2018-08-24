@@ -16,6 +16,8 @@ import java.nio.file.Paths
 
 class IntegrationTest {
 
+    // TODO: better handling of the paths to the generated files (the target folder as well)
+    
     @Test
     fun flywayPostgres() {
 
