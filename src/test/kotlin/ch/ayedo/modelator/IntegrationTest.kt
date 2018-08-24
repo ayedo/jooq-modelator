@@ -17,7 +17,7 @@ import java.nio.file.Paths
 class IntegrationTest {
 
     // TODO: better handling of the paths to the generated files (the target folder as well)
-    
+
     @Test
     fun flywayPostgres() {
 
@@ -39,7 +39,7 @@ class IntegrationTest {
     @Test
     fun liquibasePostgres() {
 
-        assertFileExistsAfter("target/generated-sources/test/ch/ayedo/modelator/test/tables/Department.java") {
+        assertFileExistsAfter("target/generated-sources/test/ch/ayedo/modelator/test/tables/Tab.java") {
 
             Modelator(Configuration(
                 dockerConfig = DockerConfig(
@@ -76,7 +76,7 @@ class IntegrationTest {
     @Test
     fun liquibaseMariaDb() {
 
-        assertFileExistsAfter("target/generated-sources/test/ch/ayedo/modelator/test/maria/tables/Department.java") {
+        assertFileExistsAfter("target/generated-sources/test/ch/ayedo/modelator/test/maria/tables/Tab.java") {
 
             Modelator(Configuration(
                 dockerConfig = DockerConfig(
