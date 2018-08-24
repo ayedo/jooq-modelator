@@ -2,11 +2,11 @@ package ch.ayedo.modelator.core
 
 import ch.ayedo.modelator.core.configuration.DatabaseConfig
 import ch.ayedo.modelator.core.configuration.HealthCheckConfig
-import net.jodah.failsafe.Failsafe
 import net.jodah.failsafe.RetryPolicy
 import org.flywaydb.core.internal.util.jdbc.DriverDataSource
 import org.flywaydb.core.internal.util.jdbc.JdbcUtils.openConnection
-import java.util.concurrent.TimeUnit.*
+import java.util.concurrent.TimeUnit.MILLISECONDS
+import javax.sql.DataSource
 
 interface HealthChecker {
 
@@ -25,7 +25,7 @@ class FlywayDependentHealthChecker(databaseConfig: DatabaseConfig, healthCheckCo
 
     private val sql = healthCheckConfig.sql
 
-    private val driverDataSource: DriverDataSource = with(databaseConfig) {
+    private val driverDataSource: DataSource = with(databaseConfig) {
         DriverDataSource(this.javaClass.classLoader, driver, url, user, password, null, sql)
     }
 
