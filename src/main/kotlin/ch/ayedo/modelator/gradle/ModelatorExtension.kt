@@ -1,14 +1,11 @@
 package ch.ayedo.modelator.gradle
 
-import java.nio.file.Path
-import java.nio.file.Paths
-
 
 open class ModelatorExtension {
 
-    var jooqConfigPath: Path = Paths.get("")
+    var jooqConfigPath: String? = null
 
-    var migrationsPath: Path = Paths.get("")
+    var migrationsPath: String? = null
 
     var dockerTag: String = "postgres:9.5"
 
@@ -26,5 +23,6 @@ open class ModelatorExtension {
 
     var sql: String = "SELECT 1"
 
+    // TODO: rename to dockerLabelKey?
     var labelKey: String = "ch.ayedo.modelator.tag"
 }

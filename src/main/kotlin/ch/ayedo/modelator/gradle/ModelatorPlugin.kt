@@ -2,6 +2,7 @@ package ch.ayedo.modelator.gradle
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import java.nio.file.Paths
 
 open class ModelatorPlugin : Plugin<Project> {
 
@@ -13,9 +14,12 @@ open class ModelatorPlugin : Plugin<Project> {
 
             val config = project.extensions.findByType(ModelatorExtension::class.java)!!
 
+            // TODO: description?
             project.tasks.create("generateMetamodel", ModelatorTask::class.java).apply {
-                jooqConfigPath = config.jooqConfigPath
-                migrationsPath = config.migrationsPath
+                jooqConfigPath = Paths.get(config.jooqConfigPath
+                    ?: throw IllegalArgumentException("Incomplete plugin configuration: path to the jOOQ generator configuration (jooqConfigPath) is missing "))
+                migrationsPath = Paths.get(config.migrationsPath
+                    ?: throw IllegalArgumentException("Incomplete plugin configuration: path to the migration files (migrationsPath) is missing"))
                 dockerLabelKey = config.labelKey
                 dockerTag = config.dockerTag
                 dockerEnv = config.dockerEnv
