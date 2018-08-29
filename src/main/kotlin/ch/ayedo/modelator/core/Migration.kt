@@ -48,7 +48,7 @@ class FlywayMigrator(databaseConfig: DatabaseConfig, migrationsPath: Path) : Mig
 
 }
 
-class LiquibaseMigrator(databaseConfig: DatabaseConfig, changelogPath: Path) : Migrator {
+class LiquibaseMigrator(databaseConfig: DatabaseConfig, migrationsPath: Path) : Migrator {
 
     private val liquibase: Liquibase
 
@@ -56,7 +56,14 @@ class LiquibaseMigrator(databaseConfig: DatabaseConfig, changelogPath: Path) : M
         val database = with(databaseConfig) {
             DatabaseFactory.getInstance().openDatabase(url, user, password, null, ResourceSupplier().simpleResourceAccessor)
         }
-        liquibase = Liquibase(changelogPath.toString(), FileSystemResourceAccessor(), database)
+
+        val changeLogFile = migrationsPath.toFile().listFiles({ pathName -> pathName.nameWithoutExtension == "databaseChangeLog" })
+
+        if (changeLogFile.size > 1) {
+            throw IllegalStateException("More than one file named databaseChangeLog found in migrations folder:\nFiles: ${changeLogFile.joinToString(prefix = "[", separator = ",", postfix = "]") { it.absolutePath }}")
+        }
+
+        liquibase = Liquibase(changeLogFile.first().toString(), FileSystemResourceAccessor(), database)
     }
 
     override fun clean() {
