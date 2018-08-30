@@ -3,7 +3,6 @@ package ch.ayedo.modelator.core
 import ch.ayedo.modelator.core.configuration.Configuration
 import ch.ayedo.modelator.core.configuration.DatabaseConfig
 import com.spotify.docker.client.DefaultDockerClient
-import org.jooq.codegen.GenerationTool
 
 class Modelator(configuration: Configuration) {
 
@@ -63,7 +62,11 @@ class Modelator(configuration: Configuration) {
     private fun runJooqGenerator() {
         val jooqConfig = jooqConfigPath.toFile().readText()
 
-        GenerationTool.generate(jooqConfig)
+        val generationTool = Class.forName("org.jooq.codegen.GenerationTool", true, Thread.currentThread().contextClassLoader)
+
+        val generateMethod = generationTool.getDeclaredMethod("generate", String::class.java)
+
+        generateMethod.invoke(generationTool, jooqConfig)
     }
 
 }

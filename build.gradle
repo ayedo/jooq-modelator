@@ -25,7 +25,6 @@ dependencies {
     compile('com.spotify:docker-client:8.11.7')
     compile('org.flywaydb:flyway-core:5.1.4')
     compile('org.liquibase:liquibase-core:3.6.2')
-    compile('org.jooq:jooq-codegen:3.11.4')
     compile('org.slf4j:slf4j-simple:1.7.25')
 
     testCompile('org.junit.jupiter:junit-jupiter-api:5.2.0')

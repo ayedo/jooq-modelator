@@ -12,7 +12,9 @@ open class ModelatorPlugin : Plugin<Project> {
 
         val modelatorRuntime = project.configurations.create("modelatorRuntime")
 
-        modelatorRuntime.description = "The classpath used to invoke the jOOQ generator. Add your JDBC drivers or generator extensions here."
+        modelatorRuntime.description = "Add JDBC drivers or generator extensions here."
+
+        project.dependencies.add(modelatorRuntime.name, "org.jooq:jooq-codegen:3.11.4")
 
         project.afterEvaluate({
 
