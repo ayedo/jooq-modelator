@@ -195,13 +195,17 @@ class IntegrationTest {
 
     }
 
-    private fun buildFileFromConfiguration(config: Configuration) =
+    private fun buildFileFromConfiguration(config: Configuration, jooqVersion: String = "3.11.4", jooqEdition: String = "OSS") =
         """
             plugins {
                 id 'ch.ayedo.modelator'
             }
 
             modelator {
+
+                jooqVersion = '$jooqVersion'
+
+                jooqEdition = '$jooqEdition'
 
                 jooqConfigPath = '${config.jooqConfigPath}'
 

@@ -2,6 +2,7 @@ package ch.ayedo.modelator.gradle
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Configuration
 import java.nio.file.Paths
 
 open class ModelatorPlugin : Plugin<Project> {
@@ -14,11 +15,11 @@ open class ModelatorPlugin : Plugin<Project> {
 
         modelatorRuntime.description = "Add JDBC drivers or generator extensions here."
 
-        project.dependencies.add(modelatorRuntime.name, "org.jooq:jooq-codegen:3.11.4")
-
         project.afterEvaluate({
 
             val config = project.extensions.findByType(ModelatorExtension::class.java)!!
+
+            addJooqDependency(project, modelatorRuntime, config)
 
             // TODO: description?
             project.tasks.create("generateMetamodel", ModelatorTask::class.java).apply {
@@ -39,5 +40,23 @@ open class ModelatorPlugin : Plugin<Project> {
             }
         })
     }
+
+    private fun addJooqDependency(project: Project, modelatorRuntime: Configuration, config: ModelatorExtension) {
+        val jooqVersion = config.jooqVersion
+            ?: throw IllegalArgumentException("Incomplete plugin configuration: jOOQ version is missing")
+
+        project.dependencies.add(modelatorRuntime.name, "${jooqEditionToGroupId(config.jooqEdition)}:jooq-codegen:${jooqVersion}")
+    }
+
+    // source: https://github.com/etiennestuder/gradle-jooq-plugin
+    private fun jooqEditionToGroupId(edition: String?) = when (edition) {
+        "OSS" -> "org.jooq"
+        "PRO" -> "org.jooq.pro"
+        "PRO_JAVA_6" -> "org.jooq.pro-java-6"
+        "TRIAL" -> "org.jooq.trial"
+        else -> throw IllegalArgumentException("jOOQ Edition incorrect. Must be one of ['OSS, 'PRO', 'PRO_JAVA_6', 'TRIAL']")
+
+    }
+
 
 }

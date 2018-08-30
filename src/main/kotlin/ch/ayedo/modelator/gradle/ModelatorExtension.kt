@@ -3,6 +3,10 @@ package ch.ayedo.modelator.gradle
 
 open class ModelatorExtension {
 
+    var jooqVersion: String? = null
+
+    var jooqEdition: String? = null
+
     var jooqConfigPath: String? = null
 
     var migrationsPath: String? = null
