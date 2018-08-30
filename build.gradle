@@ -1,12 +1,12 @@
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.2.61"
+    id 'org.jetbrains.kotlin.jvm' version '1.2.61'
     id 'com.gradle.plugin-publish' version '0.10.0'
 }
 
 apply plugin: 'java-gradle-plugin'
 
-group "ch.ayedo"
-version "1.0"
+group 'ch.ayedo'
+version '1.0'
 
 repositories {
     jcenter()
@@ -20,29 +20,29 @@ test {
 dependencies {
     compile gradleApi()
 
-    compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    compile("net.jodah:failsafe:1.1.0")
-    compile("com.spotify:docker-client:8.11.7")
-    compile("org.flywaydb:flyway-core:5.1.4")
-    compile("org.liquibase:liquibase-core:3.6.2")
-    compile("org.jooq:jooq-codegen:3.11.4")
-    compile("org.postgresql:postgresql:42.2.4")
-    compile("org.mariadb.jdbc:mariadb-java-client:2.2.6")
-    compile("org.slf4j:slf4j-simple:1.7.25")
+    compile('org.jetbrains.kotlin:kotlin-stdlib-jdk8')
+    compile('net.jodah:failsafe:1.1.0')
+    compile('com.spotify:docker-client:8.11.7')
+    compile('org.flywaydb:flyway-core:5.1.4')
+    compile('org.liquibase:liquibase-core:3.6.2')
+    compile('org.jooq:jooq-codegen:3.11.4')
+    compile('org.postgresql:postgresql:42.2.4')
+    compile('org.mariadb.jdbc:mariadb-java-client:2.2.6')
+    compile('org.slf4j:slf4j-simple:1.7.25')
 
-    testCompile("org.junit.jupiter:junit-jupiter-api:5.2.0")
-    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.2.0")
+    testCompile('org.junit.jupiter:junit-jupiter-api:5.2.0')
+    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.0')
 }
 
 pluginBundle {
-    website = "https://github.com/ayedo/modelator"
-    vcsUrl = "https://github.com/ayedo/modelator.git"
-    tags = ["jOOQ", "flyway", "liquibase", "migrations", "metamodel"]
+    website = 'https://github.com/ayedo/modelator'
+    vcsUrl = 'https://github.com/ayedo/modelator.git'
+    tags = ['jOOQ', 'flyway', 'liquibase', 'migrations', 'metamodel']
     plugins {
         modelatorPlugin {
-            id = "ch.ayedo.modelator"
-            displayName = "Modelator"
-            description = "Plugin to generate the jOOQ metamodel from Flyway & Liquibase migrations."
+            id = 'ch.ayedo.modelator'
+            displayName = 'Modelator'
+            description = 'Plugin to generate the jOOQ metamodel from Flyway & Liquibase migrations.'
             version = version()
         }
     }
