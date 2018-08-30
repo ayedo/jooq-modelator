@@ -12,6 +12,8 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.TaskAction
+import java.net.URL
+import java.net.URLClassLoader
 import java.nio.file.Path
 
 open class ModelatorTask : DefaultTask() {
@@ -49,6 +51,8 @@ open class ModelatorTask : DefaultTask() {
     @Input
     lateinit var sql: String
 
+    @Input
+    lateinit var jooqClasspath: List<URL>
 
     @TaskAction
     fun generateMetamodel() {
@@ -61,6 +65,10 @@ open class ModelatorTask : DefaultTask() {
 
         val config = Configuration(dockerConfig, healthCheckConfig, migrationsConfig, jooqConfigPath)
 
+        val classLoader = URLClassLoader(jooqClasspath.toTypedArray(), this.javaClass.classLoader)
+
+        Thread.currentThread().contextClassLoader = classLoader
+        
         Modelator(config).generate()
     }
 }

@@ -7,9 +7,11 @@ import ch.ayedo.modelator.core.configuration.MigrationEngine.LIQUIBASE
 import liquibase.Contexts
 import liquibase.Liquibase
 import liquibase.database.DatabaseFactory
+import liquibase.database.jvm.JdbcConnection
 import liquibase.resource.FileSystemResourceAccessor
-import liquibase.sdk.supplier.resource.ResourceSupplier
 import org.flywaydb.core.Flyway
+import org.flywaydb.core.internal.util.jdbc.DriverDataSource
+import org.flywaydb.core.internal.util.jdbc.JdbcUtils.openConnection
 import java.nio.file.Path
 
 interface Migrator {
@@ -54,7 +56,10 @@ class LiquibaseMigrator(databaseConfig: DatabaseConfig, migrationsPath: Path) : 
 
     init {
         val database = with(databaseConfig) {
-            DatabaseFactory.getInstance().openDatabase(url, user, password, null, ResourceSupplier().simpleResourceAccessor)
+            // Ugly workaround so that Liquibase uses the contextClassLoader
+            val flywayDataSource = DriverDataSource(Thread.currentThread().contextClassLoader, driver, url, user, password, null)
+            val connection = openConnection(flywayDataSource)
+            DatabaseFactory.getInstance().findCorrectDatabaseImplementation(JdbcConnection(connection))
         }
 
         val changeLogFile = migrationsPath.toFile().listFiles({ pathName -> pathName.nameWithoutExtension == "databaseChangeLog" })

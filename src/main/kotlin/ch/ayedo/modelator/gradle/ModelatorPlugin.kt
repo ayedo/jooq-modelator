@@ -10,6 +10,10 @@ open class ModelatorPlugin : Plugin<Project> {
 
         project.extensions.create("modelator", ModelatorExtension::class.java)
 
+        val modelatorRuntime = project.configurations.create("modelatorRuntime")
+
+        modelatorRuntime.description = "The classpath used to invoke the jOOQ generator. Add your JDBC drivers or generator extensions here."
+
         project.afterEvaluate({
 
             val config = project.extensions.findByType(ModelatorExtension::class.java)!!
@@ -29,6 +33,7 @@ open class ModelatorPlugin : Plugin<Project> {
                 delayMs = config.delayMs
                 maxDurationMs = config.maxDurationMs
                 sql = config.sql
+                jooqClasspath = modelatorRuntime.map { entry -> entry.toURI().toURL() }
             }
         })
     }

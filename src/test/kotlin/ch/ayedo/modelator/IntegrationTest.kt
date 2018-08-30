@@ -226,5 +226,15 @@ class IntegrationTest {
                 sql = '${config.healthCheckConfig.sql}'
 
             }
+
+            repositories {
+                jcenter()
+            }
+
+            dependencies {
+                modelatorRuntime('org.postgresql:postgresql:42.2.4')
+                modelatorRuntime('org.mariadb.jdbc:mariadb-java-client:2.2.6')
+            }
+
         """.trimIndent()
 }
