@@ -47,8 +47,8 @@ Add the following to your *build.gradle* plugin configuration block:
 
 To configure the plugin you need to add two things:
 
-- A 'jooqModelator' plugin configuration extension
-- A 'jooqModelatorRuntime' configuration in the dependencies for your database driver
+- A 'jooqModelator' plugin configuration extension (section "Plugin Configuration")
+- A 'jooqModelatorRuntime' configuration in the dependencies for your database driver (section "Database Configuration") 
 
 ### Plugin Configuration
 
