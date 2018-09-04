@@ -13,7 +13,13 @@ It solves the following problems:
 
 ## How it works
 
-The plugin tries to pull the image with a provided tag from the docker store if necessary. It will then create a container with the of that image, or reuse an existing container. The plugin uses a key to tag the containers it has created. Then the container is started. A health check waits for the database inside the container to start. The health check is RDBMs and docker independent, as the plugin sends a SQL statement, and waits for its successful execution.
+The plugin tries to pull the image with a provided tag from the docker store if necessary. It will then create a container with the of that image, or reuse an existing container. The plugin uses a key to tag the containers it has created. Then the container is started. 
+
+A health check waits for the database inside the container to start. The health check is RDBMs and docker independent, as the plugin sends a SQL statement, and waits for its successful execution.
+
+When the database is ready, the migrators are run against it.
+
+After the migrations the jooq-generator is run.
 
 ## Requirements
 
