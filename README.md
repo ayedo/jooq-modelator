@@ -11,6 +11,10 @@ It solves the following problems:
 - You can run migrations against your very own RDMS, as opposed to an in memory H2 in compatibility mode like other plugins do
 - The plugin is incremental end-to-end, and only runs if the migrations have changed, or the target metamodel folder has changed
 
+## How it works
+
+The plugin tries to pull the image with a provided tag from the docker store if necessary. It will then create a container with the of that image, or reuse an existing container. The plugin uses a key to tag the containers it has created. Then the container is started. A health check waits for the database inside the container to start. The health check is RDBMs and docker independent, as the plugin sends a SQL statement, and waits for its successful execution.
+
 ## Requirements
 
 You need to have Docker installed.
