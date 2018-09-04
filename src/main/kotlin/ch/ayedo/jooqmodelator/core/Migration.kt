@@ -55,10 +55,10 @@ class LiquibaseMigrator(databaseConfig: DatabaseConfig, migrationsPath: Path) : 
     private val liquibase: Liquibase
 
     init {
+        // TODO: not sure whether connection is closed correctly in this migrator
         val database = with(databaseConfig) {
             // Ugly workaround so that Liquibase uses the contextClassLoader
             val flywayDataSource = DriverDataSource(Thread.currentThread().contextClassLoader, driver, url, user, password, null)
-            // TODO: close connection? use 'use'
             val connection = openConnection(flywayDataSource)
             DatabaseFactory.getInstance().findCorrectDatabaseImplementation(JdbcConnection(connection))
         }
