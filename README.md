@@ -1,4 +1,7 @@
-#Jooq-Modelator
+Jooq-Modelator
+==============
+
+## Overview
 
 This gradle plugin generates Jooq metamodel classes from Flyway & Liquibase migration files. It does so by running them against a dockerized database, and then running the Jooq generator against that database.
 
@@ -28,11 +31,9 @@ __For Liquibase there are limitations:__
 - You cannot chose the name of your database change log. __It has to be named 'databaseChangeLog'__. The file ending does not matter, and can be any of the supported file types.
 - All migration files need be located within the configured migrations folder (see section 'Configuration') for the incremental feature to work.
 
-All databases which you can run in a Docker container, and for which a JDBC driver can be provided, are supported.
+All databases which you can run in a Docker container, and for which a JDBC driver can be provided, are supported. The plugin has been successfully tested with Postgres 9.5, and MariaDB 10.2.
 
-The plugin has been successfully tested with Postgres 9.5, and MariaDB 10.2.
-
-Due to backwards incompatible changes in the Jooq Generator API, __no version older than 3.11.0 is currently supported__.
+Due to backwards incompatible changes in the API, __no jooq Generator version older than 3.11.0 is currently supported__.
 
 ## Installation
 
@@ -46,12 +47,14 @@ Add the following to your *build.gradle* plugin configuration block:
 
 To configure the plugin you need to add two things:
 
-    - A 'jooqModelator' extension
-    - A 'jooqModelatorRuntime' configuration in the dependencies for your database driver
+- A 'jooqModelator' plugin configuration extension
+- A 'jooqModelatorRuntime' configuration in the dependencies for your database driver
 
-Some properties have sensible defaults, and you probably do not need to change them. 
+### Plugin Configuration
+
 
 Add the following to your build script:
+
 
     jooqModelator {
     
@@ -94,7 +97,7 @@ Add the following to your build script:
         // The plugin labels the containers it creates, and uses
         // the following labelkey as key to do so.
         // Should normally be left to the default
-        labelKey = 'ch.ayedo.jooqmodelator.tag' // Not required This is the default
+        labelKey = 'ch.ayedo.jooqmodelator.tag' // Not required. This is the default
     
         // HEALTH CHECK RELATED CONFIGURATION
         
@@ -102,11 +105,13 @@ Add the following to your build script:
         delayMs = 500 // Not required This is the default
     
         // How long to maximally wait for the database to react to the healthcheck. In milliseconds.
-        maxDurationMs = 20000 // Not required This is the default
+        maxDurationMs = 20000 // Not required. This is the default
     
         // The SQL statement to send to the database server as part of the health check.
-        sql = 'SELECT 1' // Not required This is the default
+        sql = 'SELECT 1' // Not required. This is the default
     }
+
+### Database Configuration
 
 You add your database drivers as follows:
 
