@@ -50,7 +50,7 @@ Due to backwards incompatible changes in the API, __no jooq Generator version ol
 Add the following to your *build.gradle* plugin configuration block:
 
     plugins {
-        id 'ch.ayedo.jooqmodelator:1.0.0'
+          id 'ch.ayedo.jooqmodelator' version '1.0.0'
     }
 
 ## Configuration
