@@ -60,8 +60,9 @@ To configure the plugin you need to add two things:
 - A 'jooqModelator' plugin configuration extension (subsection "Plugin Configuration")
 - A 'jooqModelatorRuntime' configuration in the dependencies for your database driver (subsection "Database Configuration") 
 
-### Plugin Configuration
+For example projects please see Section "Example Projects".
 
+### Plugin Configuration
 
 Add the following to your build script:
 
@@ -141,10 +142,12 @@ Use it to generate the Jooq metamodel.
 
 ### Postgres
 
-Flyway: https://github.com/ayedo/jooq-modelator-examples/tree/flywayPostgres
-Liquibase: https://github.com/ayedo/jooq-modelator-examples/tree/liquibasePostgres
+Flyway: [click here](https://github.com/ayedo/jooq-modelator-examples/tree/flywayPostgres)
+
+Liquibase: [click here](https://github.com/ayedo/jooq-modelator-examples/tree/liquibasePostgres)
 
 ### MariaDb
 
-Flyway: https://github.com/ayedo/jooq-modelator-examples/tree/liquibasePostgres
-Liquibase: https://github.com/ayedo/jooq-modelator-examples/tree/liquibaseMariaDb
+Flyway: [click here](https://github.com/ayedo/jooq-modelator-examples/tree/liquibasePostgres)
+
+Liquibase: [click here](https://github.com/ayedo/jooq-modelator-examples/tree/liquibaseMariaDb)
