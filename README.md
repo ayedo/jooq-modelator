@@ -32,7 +32,7 @@ All databases which you can run in a Docker container, and for which a JDBC driv
 
 The plugin has been successfully tested with Postgres 9.5, and MariaDB 10.2.
 
-Due to backwards incompatible changes in the Jooq Generator API, no version older than 3.11.0 is currently supported.
+Due to backwards incompatible changes in the Jooq Generator API, __no version older than 3.11.0 is currently supported__.
 
 ## Installation
 
