@@ -40,7 +40,7 @@ pluginBundle {
             id = 'ch.ayedo.jooqmodelator'
             displayName = 'Jooq-Modelator'
             description = 'Plugin to generate the jOOQ metamodel from Flyway & Liquibase migrations.'
-            version = version()
+            version = "1.0.0"
         }
     }
 }
