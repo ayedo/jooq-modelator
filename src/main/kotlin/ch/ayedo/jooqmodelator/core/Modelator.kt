@@ -1,7 +1,7 @@
-package ch.ayedo.modelator.core
+package ch.ayedo.jooqmodelator.core
 
-import ch.ayedo.modelator.core.configuration.Configuration
-import ch.ayedo.modelator.core.configuration.DatabaseConfig
+import ch.ayedo.jooqmodelator.core.configuration.Configuration
+import ch.ayedo.jooqmodelator.core.configuration.DatabaseConfig
 import com.spotify.docker.client.DefaultDockerClient
 
 class Modelator(configuration: Configuration) {

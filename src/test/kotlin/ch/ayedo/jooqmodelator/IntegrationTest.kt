@@ -1,13 +1,13 @@
-package ch.ayedo.modelator
+package ch.ayedo.jooqmodelator
 
-import ch.ayedo.modelator.IntegrationTest.Database.MARIADB
-import ch.ayedo.modelator.IntegrationTest.Database.POSTGRES
-import ch.ayedo.modelator.core.configuration.Configuration
-import ch.ayedo.modelator.core.configuration.DockerConfig
-import ch.ayedo.modelator.core.configuration.HealthCheckConfig
-import ch.ayedo.modelator.core.configuration.MigrationConfig
-import ch.ayedo.modelator.core.configuration.MigrationEngine
-import ch.ayedo.modelator.core.configuration.PortMapping
+import ch.ayedo.jooqmodelator.IntegrationTest.Database.MARIADB
+import ch.ayedo.jooqmodelator.IntegrationTest.Database.POSTGRES
+import ch.ayedo.jooqmodelator.core.configuration.Configuration
+import ch.ayedo.jooqmodelator.core.configuration.DockerConfig
+import ch.ayedo.jooqmodelator.core.configuration.HealthCheckConfig
+import ch.ayedo.jooqmodelator.core.configuration.MigrationConfig
+import ch.ayedo.jooqmodelator.core.configuration.MigrationEngine
+import ch.ayedo.jooqmodelator.core.configuration.PortMapping
 import org.gradle.internal.impldep.org.junit.Rule
 import org.gradle.internal.impldep.org.junit.rules.TemporaryFolder
 import org.gradle.testkit.runner.GradleRunner
@@ -40,7 +40,7 @@ class IntegrationTest {
 
         assertSuccessfulBuild(tempDir, config)
 
-        assertFileExists(tempDir.root.absolutePath + "/ch/ayedo/modelator/test/tables/Tab.java")
+        assertFileExists(tempDir.root.absolutePath + "/ch/ayedo/jooqmodelator/test/tables/Tab.java")
 
     }
 
@@ -61,7 +61,7 @@ class IntegrationTest {
 
         assertSuccessfulBuild(tempDir, config)
 
-        assertFileExists(tempDir.root.absolutePath + "/ch/ayedo/modelator/test/tables/Tab.java")
+        assertFileExists(tempDir.root.absolutePath + "/ch/ayedo/jooqmodelator/test/tables/Tab.java")
 
     }
 
@@ -82,7 +82,7 @@ class IntegrationTest {
 
         assertSuccessfulBuild(tempDir, config)
 
-        assertFileExists(tempDir.root.absolutePath + "/ch/ayedo/modelator/test/maria/tables/Tab.java")
+        assertFileExists(tempDir.root.absolutePath + "/ch/ayedo/jooqmodelator/test/maria/tables/Tab.java")
 
     }
 
@@ -103,7 +103,7 @@ class IntegrationTest {
 
         assertSuccessfulBuild(tempDir, config)
 
-        assertFileExists(tempDir.root.absolutePath + "/ch/ayedo/modelator/test/maria/tables/Tab.java")
+        assertFileExists(tempDir.root.absolutePath + "/ch/ayedo/jooqmodelator/test/maria/tables/Tab.java")
 
     }
 
@@ -139,7 +139,7 @@ class IntegrationTest {
                     <inputSchema>public</inputSchema>
                 </database>
                 <target>
-                    <packageName>ch.ayedo.modelator.test</packageName>
+                    <packageName>ch.ayedo.jooqmodelator.test</packageName>
                     <directory>$target</directory>
                 </target>
             </generator>
@@ -160,7 +160,7 @@ class IntegrationTest {
                     <name>org.jooq.meta.mariadb.MariaDBDatabase</name>
                 </database>
                 <target>
-                    <packageName>ch.ayedo.modelator.test</packageName>
+                    <packageName>ch.ayedo.jooqmodelator.test</packageName>
                     <directory>$target</directory>
                 </target>
             </generator>
@@ -187,21 +187,21 @@ class IntegrationTest {
         val result = GradleRunner.create()
             .withPluginClasspath()
             .withProjectDir(tempDir.root)
-            .withArguments("generateMetamodel", "--stacktrace")
+            .withArguments("generateJooqMetamodel", "--stacktrace")
             .withDebug(true)
             .build()
 
-        Assertions.assertTrue(result.task(":generateMetamodel")?.outcome == TaskOutcome.SUCCESS)
+        Assertions.assertTrue(result.task(":generateJooqMetamodel")?.outcome == TaskOutcome.SUCCESS)
 
     }
 
     private fun buildFileFromConfiguration(config: Configuration, jooqVersion: String = "3.11.4", jooqEdition: String = "OSS") =
         """
             plugins {
-                id 'ch.ayedo.modelator'
+                id 'ch.ayedo.jooqmodelator'
             }
 
-            modelator {
+            jooqModelator {
 
                 jooqVersion = '$jooqVersion'
 
@@ -236,8 +236,8 @@ class IntegrationTest {
             }
 
             dependencies {
-                modelatorRuntime('org.postgresql:postgresql:42.2.4')
-                modelatorRuntime('org.mariadb.jdbc:mariadb-java-client:2.2.6')
+                jooqModelatorRuntime('org.postgresql:postgresql:42.2.4')
+                jooqModelatorRuntime('org.mariadb.jdbc:mariadb-java-client:2.2.6')
             }
 
         """.trimIndent()

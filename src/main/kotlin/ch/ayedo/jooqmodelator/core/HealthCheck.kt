@@ -1,7 +1,7 @@
-package ch.ayedo.modelator.core
+package ch.ayedo.jooqmodelator.core
 
-import ch.ayedo.modelator.core.configuration.DatabaseConfig
-import ch.ayedo.modelator.core.configuration.HealthCheckConfig
+import ch.ayedo.jooqmodelator.core.configuration.DatabaseConfig
+import ch.ayedo.jooqmodelator.core.configuration.HealthCheckConfig
 import net.jodah.failsafe.RetryPolicy
 import org.flywaydb.core.internal.util.jdbc.DriverDataSource
 import org.flywaydb.core.internal.util.jdbc.JdbcUtils.openConnection

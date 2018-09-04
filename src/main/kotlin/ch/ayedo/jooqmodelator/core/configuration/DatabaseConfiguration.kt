@@ -1,4 +1,4 @@
-package ch.ayedo.modelator.core.configuration
+package ch.ayedo.jooqmodelator.core.configuration
 
 import java.nio.file.Path
 import javax.xml.bind.JAXBContext

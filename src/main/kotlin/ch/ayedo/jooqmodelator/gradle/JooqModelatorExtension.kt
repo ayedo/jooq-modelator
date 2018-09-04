@@ -1,7 +1,7 @@
-package ch.ayedo.modelator.gradle
+package ch.ayedo.jooqmodelator.gradle
 
 
-open class ModelatorExtension {
+open class JooqModelatorExtension {
 
     var jooqVersion: String? = null
 
@@ -28,5 +28,5 @@ open class ModelatorExtension {
     var sql: String = "SELECT 1"
 
     // TODO: rename to dockerLabelKey?
-    var labelKey: String = "ch.ayedo.modelator.tag"
+    var labelKey: String = "ch.ayedo.jooqmodelator.tag"
 }

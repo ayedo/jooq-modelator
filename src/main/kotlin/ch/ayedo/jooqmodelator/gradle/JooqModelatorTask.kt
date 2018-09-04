@@ -1,12 +1,12 @@
-package ch.ayedo.modelator.gradle
+package ch.ayedo.jooqmodelator.gradle
 
-import ch.ayedo.modelator.core.Modelator
-import ch.ayedo.modelator.core.configuration.Configuration
-import ch.ayedo.modelator.core.configuration.DockerConfig
-import ch.ayedo.modelator.core.configuration.HealthCheckConfig
-import ch.ayedo.modelator.core.configuration.MigrationConfig
-import ch.ayedo.modelator.core.configuration.MigrationEngine
-import ch.ayedo.modelator.core.configuration.PortMapping
+import ch.ayedo.jooqmodelator.core.Modelator
+import ch.ayedo.jooqmodelator.core.configuration.Configuration
+import ch.ayedo.jooqmodelator.core.configuration.DockerConfig
+import ch.ayedo.jooqmodelator.core.configuration.HealthCheckConfig
+import ch.ayedo.jooqmodelator.core.configuration.MigrationConfig
+import ch.ayedo.jooqmodelator.core.configuration.MigrationEngine
+import ch.ayedo.jooqmodelator.core.configuration.PortMapping
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputDirectory
@@ -16,7 +16,7 @@ import java.net.URL
 import java.net.URLClassLoader
 import java.nio.file.Path
 
-open class ModelatorTask : DefaultTask() {
+open class JooqModelatorTask : DefaultTask() {
 
     @InputFile
     lateinit var jooqConfigPath: Path
@@ -68,7 +68,7 @@ open class ModelatorTask : DefaultTask() {
         val classLoader = URLClassLoader(jooqClasspath.toTypedArray(), this.javaClass.classLoader)
 
         Thread.currentThread().contextClassLoader = classLoader
-        
+
         Modelator(config).generate()
     }
 }

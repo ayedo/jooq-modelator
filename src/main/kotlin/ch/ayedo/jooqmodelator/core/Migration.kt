@@ -1,9 +1,9 @@
-package ch.ayedo.modelator.core
+package ch.ayedo.jooqmodelator.core
 
-import ch.ayedo.modelator.core.configuration.DatabaseConfig
-import ch.ayedo.modelator.core.configuration.MigrationConfig
-import ch.ayedo.modelator.core.configuration.MigrationEngine.FLYWAY
-import ch.ayedo.modelator.core.configuration.MigrationEngine.LIQUIBASE
+import ch.ayedo.jooqmodelator.core.configuration.DatabaseConfig
+import ch.ayedo.jooqmodelator.core.configuration.MigrationConfig
+import ch.ayedo.jooqmodelator.core.configuration.MigrationEngine.FLYWAY
+import ch.ayedo.jooqmodelator.core.configuration.MigrationEngine.LIQUIBASE
 import liquibase.Contexts
 import liquibase.Liquibase
 import liquibase.database.DatabaseFactory
@@ -58,6 +58,7 @@ class LiquibaseMigrator(databaseConfig: DatabaseConfig, migrationsPath: Path) : 
         val database = with(databaseConfig) {
             // Ugly workaround so that Liquibase uses the contextClassLoader
             val flywayDataSource = DriverDataSource(Thread.currentThread().contextClassLoader, driver, url, user, password, null)
+            // TODO: close connection? use 'use'
             val connection = openConnection(flywayDataSource)
             DatabaseFactory.getInstance().findCorrectDatabaseImplementation(JdbcConnection(connection))
         }

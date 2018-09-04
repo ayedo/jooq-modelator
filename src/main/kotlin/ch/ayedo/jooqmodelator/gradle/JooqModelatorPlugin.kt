@@ -1,28 +1,28 @@
-package ch.ayedo.modelator.gradle
+package ch.ayedo.jooqmodelator.gradle
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import java.nio.file.Paths
 
-open class ModelatorPlugin : Plugin<Project> {
+open class JooqModelatorPlugin : Plugin<Project> {
 
     override fun apply(project: Project) {
 
-        project.extensions.create("modelator", ModelatorExtension::class.java)
+        project.extensions.create("jooqModelator", JooqModelatorExtension::class.java)
 
-        val modelatorRuntime = project.configurations.create("modelatorRuntime")
+        val modelatorRuntime = project.configurations.create("jooqModelatorRuntime")
 
         modelatorRuntime.description = "Add JDBC drivers or generator extensions here."
 
         project.afterEvaluate({
 
-            val config = project.extensions.findByType(ModelatorExtension::class.java)!!
+            val config = project.extensions.findByType(JooqModelatorExtension::class.java)!!
 
             addJooqDependency(project, modelatorRuntime, config)
 
             // TODO: description?
-            project.tasks.create("generateMetamodel", ModelatorTask::class.java).apply {
+            project.tasks.create("generateJooqMetamodel", JooqModelatorTask::class.java).apply {
                 jooqConfigPath = Paths.get(config.jooqConfigPath
                     ?: throw IllegalArgumentException("Incomplete plugin configuration: path to the jOOQ generator configuration (jooqConfigPath) is missing "))
                 migrationsPath = Paths.get(config.migrationsPath
@@ -41,7 +41,7 @@ open class ModelatorPlugin : Plugin<Project> {
         })
     }
 
-    private fun addJooqDependency(project: Project, modelatorRuntime: Configuration, config: ModelatorExtension) {
+    private fun addJooqDependency(project: Project, modelatorRuntime: Configuration, config: JooqModelatorExtension) {
         val jooqVersion = config.jooqVersion
             ?: throw IllegalArgumentException("Incomplete plugin configuration: jOOQ version is missing")
 
