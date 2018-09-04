@@ -27,6 +27,5 @@ open class JooqModelatorExtension {
 
     var sql: String = "SELECT 1"
 
-    // TODO: rename to dockerLabelKey?
     var labelKey: String = "ch.ayedo.jooqmodelator.tag"
 }
