@@ -11,15 +11,15 @@ open class JooqModelatorExtension {
 
     var migrationsPath: String? = null
 
-    var dockerTag: String = "postgres:9.5"
+    var dockerTag: String? = null
 
     var dockerEnv: List<String> = emptyList()
 
-    var dockerHostPort: Int = 5432
+    var dockerHostPort: Int? = null
 
-    var dockerContainerPort: Int = 5432
+    var dockerContainerPort: Int? = null
 
-    var migrationEngine: String = "FLYWAY"
+    var migrationEngine: String? = null
 
     var delayMs: Long = 500
 
