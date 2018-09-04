@@ -43,7 +43,7 @@ __For Liquibase there are limitations:__
 
 All databases which you can run in a Docker container, and for which a JDBC driver can be provided, are supported. The plugin has been successfully tested with Postgres 9.5, and MariaDB 10.2.
 
-Due to backwards incompatible changes in the API, __no jooq Generator version older than 3.11.0 is currently supported__.
+Due to backwards incompatible changes in the API, __no jooq generator version older than 3.11.0 is currently supported__.
 
 ## Installation
 
