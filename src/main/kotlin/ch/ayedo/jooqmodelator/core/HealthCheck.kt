@@ -6,7 +6,6 @@ import net.jodah.failsafe.RetryPolicy
 import org.flywaydb.core.internal.util.jdbc.DriverDataSource
 import org.flywaydb.core.internal.util.jdbc.JdbcUtils.openConnection
 import java.util.concurrent.TimeUnit.MILLISECONDS
-import javax.sql.DataSource
 
 interface HealthChecker {
 
@@ -25,7 +24,7 @@ class FlywayDependentHealthChecker(databaseConfig: DatabaseConfig, healthCheckCo
 
     private val sql = healthCheckConfig.sql
 
-    private val driverDataSource: DataSource = with(databaseConfig) {
+    private val driverDataSource = with(databaseConfig) {
         DriverDataSource(Thread.currentThread().contextClassLoader, driver, url, user, password, null, sql)
     }
 
