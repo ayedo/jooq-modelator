@@ -136,3 +136,15 @@ The plugins adds a task named *generateJooqMetamodel* to your build.
 Use it to generate the Jooq metamodel.
 
     ./gradlew generateJooqMetamodel
+
+## Example Projects
+
+### Postgres
+
+Flyway: https://github.com/ayedo/jooq-modelator-examples/tree/flywayPostgres
+Liquibase: https://github.com/ayedo/jooq-modelator-examples/tree/liquibasePostgres
+
+### MariaDb
+
+Flyway: https://github.com/ayedo/jooq-modelator-examples/tree/liquibasePostgres
+Liquibase: https://github.com/ayedo/jooq-modelator-examples/tree/liquibaseMariaDb
