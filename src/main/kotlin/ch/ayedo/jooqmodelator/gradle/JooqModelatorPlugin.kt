@@ -21,8 +21,8 @@ open class JooqModelatorPlugin : Plugin<Project> {
 
             addJooqDependency(project, modelatorRuntime, config)
 
-            // TODO: description?
             project.tasks.create("generateJooqMetamodel", JooqModelatorTask::class.java).apply {
+                description = "Generates the jOOQ metamodel from migrations files using a dockerized database."
                 jooqConfigPath = Paths.get(config.jooqConfigPath
                     ?: throw IllegalArgumentException("Incomplete plugin configuration: path to the jOOQ generator configuration (jooqConfigPath) is missing "))
                 migrationsPath = Paths.get(config.migrationsPath
