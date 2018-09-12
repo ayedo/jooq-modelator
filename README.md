@@ -141,6 +141,8 @@ Use it to generate the Jooq metamodel.
 
     ./gradlew generateJooqMetamodel
 
+Please note: the first time you run the plugin it might take a long time to download missing docker images.
+
 ## Example Projects
 
 ### Postgres
