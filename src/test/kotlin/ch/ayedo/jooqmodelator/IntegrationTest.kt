@@ -12,6 +12,8 @@ import org.gradle.internal.impldep.org.junit.Rule
 import org.gradle.internal.impldep.org.junit.rules.TemporaryFolder
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
+import org.gradle.testkit.runner.TaskOutcome.SUCCESS
+import org.gradle.testkit.runner.TaskOutcome.UP_TO_DATE
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.io.File
@@ -22,6 +24,10 @@ class IntegrationTest {
 
     @Rule
     private val tempDir = TemporaryFolder().also { it.create() }
+
+    private val jooqPackageName = "ch.ayedo.jooqmodelator.test"
+
+    private val jooqPackagePath = "/" + jooqPackageName.replace(".", "/")
 
     @Test
     fun flywayPostgres() {
@@ -38,9 +44,11 @@ class IntegrationTest {
             jooqConfigPath = jooqConfig.toPath()
         )
 
-        assertSuccessfulBuild(tempDir, config)
+        createBuildFile(config)
 
-        assertFileExists(tempDir.root.absolutePath + "/ch/ayedo/jooqmodelator/test/tables/Tab.java")
+        assertBuildOutcome(SUCCESS)
+
+        assertFileExists(tempDir.root.absolutePath + "$jooqPackagePath/tables/Tab.java")
 
     }
 
@@ -59,9 +67,11 @@ class IntegrationTest {
             jooqConfigPath = jooqConfig.toPath()
         )
 
-        assertSuccessfulBuild(tempDir, config)
+        createBuildFile(config)
 
-        assertFileExists(tempDir.root.absolutePath + "/ch/ayedo/jooqmodelator/test/tables/Tab.java")
+        assertBuildOutcome(SUCCESS)
+
+        assertFileExists(tempDir.root.absolutePath + "$jooqPackagePath/tables/Tab.java")
 
     }
 
@@ -80,9 +90,11 @@ class IntegrationTest {
             jooqConfigPath = jooqConfig.toPath()
         )
 
-        assertSuccessfulBuild(tempDir, config)
+        createBuildFile(config)
 
-        assertFileExists(tempDir.root.absolutePath + "/ch/ayedo/jooqmodelator/test/maria/tables/Tab.java")
+        assertBuildOutcome(SUCCESS)
+
+        assertFileExists(tempDir.root.absolutePath + "$jooqPackagePath/maria/tables/Tab.java")
 
     }
 
@@ -101,9 +113,36 @@ class IntegrationTest {
             jooqConfigPath = jooqConfig.toPath()
         )
 
-        assertSuccessfulBuild(tempDir, config)
+        createBuildFile(config)
 
-        assertFileExists(tempDir.root.absolutePath + "/ch/ayedo/jooqmodelator/test/maria/tables/Tab.java")
+        assertBuildOutcome(SUCCESS)
+
+        assertFileExists(tempDir.root.absolutePath + "$jooqPackagePath/maria/tables/Tab.java")
+
+    }
+
+    @Test
+    fun incrementalBuildTest() {
+
+        val jooqConfig = createJooqConfig(POSTGRES)
+
+        val config = Configuration(
+            dockerConfig = DockerConfig(
+                tag = "postgres:9.5",
+                env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
+                portMapping = PortMapping(5432, 5432)),
+            healthCheckConfig = HealthCheckConfig(),
+            migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPath = getResourcePath("/migrations")),
+            jooqConfigPath = jooqConfig.toPath()
+        )
+
+        createBuildFile(config)
+
+        assertBuildOutcome(SUCCESS)
+
+        assertBuildOutcome(UP_TO_DATE)
+
+        assertFileExists(tempDir.root.absolutePath + "/ch/ayedo/jooqmodelator/test/tables/Tab.java")
 
     }
 
@@ -139,7 +178,7 @@ class IntegrationTest {
                     <inputSchema>public</inputSchema>
                 </database>
                 <target>
-                    <packageName>ch.ayedo.jooqmodelator.test</packageName>
+                    <packageName>$jooqPackageName</packageName>
                     <directory>$target</directory>
                 </target>
             </generator>
@@ -160,7 +199,7 @@ class IntegrationTest {
                     <name>org.jooq.meta.mariadb.MariaDBDatabase</name>
                 </database>
                 <target>
-                    <packageName>ch.ayedo.jooqmodelator.test</packageName>
+                    <packageName>$jooqPackageName</packageName>
                     <directory>$target</directory>
                 </target>
             </generator>
@@ -176,13 +215,15 @@ class IntegrationTest {
 
     private fun getResourcePath(path: String): Path = Paths.get(this.javaClass.getResource(path).toURI())
 
-    private fun assertSuccessfulBuild(tempDir: TemporaryFolder, config: Configuration) {
-
+    private fun createBuildFile(config: Configuration) {
         tempDir.newFile("build.gradle").also {
-            val buildFileText = buildFileFromConfiguration(config)
+            val buildFileText = buildFileFromConfiguration(config, tempDir.root.absolutePath + jooqPackagePath)
 
             it.writeText(buildFileText)
         }
+    }
+
+    private fun assertBuildOutcome(targetOutcome: TaskOutcome) {
 
         val result = GradleRunner.create()
             .withPluginClasspath()
@@ -191,11 +232,11 @@ class IntegrationTest {
             .withDebug(true)
             .build()
 
-        Assertions.assertTrue(result.task(":generateJooqMetamodel")?.outcome == TaskOutcome.SUCCESS)
+        Assertions.assertTrue(result.task(":generateJooqMetamodel")?.outcome == targetOutcome)
 
     }
 
-    private fun buildFileFromConfiguration(config: Configuration, jooqVersion: String = "3.11.4", jooqEdition: String = "OSS") =
+    private fun buildFileFromConfiguration(config: Configuration, jooqOutputPath: String, jooqVersion: String = "3.11.4", jooqEdition: String = "OSS") =
         """
             plugins {
                 id 'ch.ayedo.jooqmodelator'
@@ -208,6 +249,8 @@ class IntegrationTest {
                 jooqEdition = '$jooqEdition'
 
                 jooqConfigPath = '${config.jooqConfigPath}'
+
+                jooqOutputPath = '$jooqOutputPath'
 
                 migrationsPath = '${config.migrationConfig.migrationsPath}'
 

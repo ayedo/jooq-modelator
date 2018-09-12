@@ -11,6 +11,7 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 import java.net.URL
 import java.net.URLClassLoader
@@ -20,6 +21,9 @@ open class JooqModelatorTask : DefaultTask() {
 
     @InputFile
     lateinit var jooqConfigPath: Path
+
+    @OutputDirectory
+    lateinit var jooqOutputPath: Path
 
     @InputDirectory
     lateinit var migrationsPath: Path
