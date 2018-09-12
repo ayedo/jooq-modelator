@@ -25,26 +25,29 @@ open class JooqModelatorPlugin : Plugin<Project> {
                 description = "Generates the jOOQ metamodel from migrations files using a dockerized database."
 
                 jooqConfigPath = Paths.get(config.jooqConfigPath
-                    ?: throw IllegalArgumentException("Incomplete jooqModelator plugin configuration: path to the jOOQ generator configuration (jooqConfigPath) is missing"))
+                    ?: throw IncompletePluginConfigurationException("path to the jOOQ generator configuration (jooqConfigPath)"))
+
+                jooqOutputPath = Paths.get(config.jooqOutputPath
+                    ?: throw IncompletePluginConfigurationException("path to the output directory (jooqOutputDirectory)"))
 
                 migrationsPath = Paths.get(config.migrationsPath
-                    ?: throw IllegalArgumentException("Incomplete jooqModelator plugin configuration: path to the migration files (migrationsPath) is missing"))
+                    ?: throw IncompletePluginConfigurationException("path to the migration files (migrationsPath)"))
 
                 dockerLabelKey = config.labelKey
 
                 dockerEnv = config.dockerEnv
 
                 dockerTag = config.dockerTag
-                    ?: throw IllegalArgumentException("Incomplete jooqModelator plugin configuration: docker image tag is missing")
+                    ?: throw IncompletePluginConfigurationException("docker image tag (dockerTag)")
 
                 dockerHostPort = config.dockerHostPort
-                    ?: throw IllegalArgumentException("Incomplete jooqModelator plugin configuration: docker host port is missing")
+                    ?: throw IncompletePluginConfigurationException("docker host port (dockerHostPort)")
 
                 dockerContainerPort = config.dockerContainerPort
-                    ?: throw IllegalArgumentException("Incomplete jooqModelator plugin configuration: docker container port is missing")
+                    ?: throw IncompletePluginConfigurationException("docker container port (dockerContainerPort)")
 
                 migrationEngine = config.migrationEngine
-                    ?: throw IllegalArgumentException("Incomplete jooqModelator plugin configuration: migration engine is missing")
+                    ?: throw IncompletePluginConfigurationException("migration engine (migrationEngine)")
 
                 delayMs = config.delayMs
 
@@ -59,7 +62,7 @@ open class JooqModelatorPlugin : Plugin<Project> {
 
     private fun addJooqDependency(project: Project, modelatorRuntime: Configuration, config: JooqModelatorExtension) {
         val jooqVersion = config.jooqVersion
-            ?: throw IllegalArgumentException("Incomplete jooqModelator plugin configuration: jOOQ version is missing")
+            ?: throw IncompletePluginConfigurationException("jOOQ version (jooqVersion)")
 
         project.dependencies.add(modelatorRuntime.name, "${jooqEditionToGroupId(config.jooqEdition)}:jooq-codegen:${jooqVersion}")
     }
@@ -74,5 +77,8 @@ open class JooqModelatorPlugin : Plugin<Project> {
 
     }
 
+    class IncompletePluginConfigurationException(missing: String) : IllegalArgumentException(
+        "Incomplete jooqModelator plugin configuration: $missing is missing"
+    )
 
 }

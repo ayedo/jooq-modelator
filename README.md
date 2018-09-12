@@ -50,7 +50,7 @@ Due to backwards incompatible changes in the API, __no jooq generator version ol
 Add the following to your *build.gradle* plugin configuration block:
 
     plugins {
-          id 'ch.ayedo.jooqmodelator' version '1.0.0'
+          id 'ch.ayedo.jooqmodelator' version '2.0.0'
     }
 
 ## Configuration
@@ -83,6 +83,9 @@ Add the following to your build script:
         // The path to the XML jooq configuration file
         jooqConfigPath = '/var/folders/temp/jooqConfig.xml' // required, this is an example
     
+        // The path to where the metamodel with be generated to
+        jooqOutputPath = '/var/folders/temp/ch.acme.metmodel' // required, this is an example
+
         // MIGRATION ENGINE RELATED CONFIGURATION
         
         // Which migration engine to use. 

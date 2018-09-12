@@ -9,6 +9,8 @@ open class JooqModelatorExtension {
 
     var jooqConfigPath: String? = null
 
+    var jooqOutputPath: String? = null
+
     var migrationsPath: String? = null
 
     var dockerTag: String? = null
