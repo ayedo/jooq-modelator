@@ -111,7 +111,7 @@ Add the following to your build script:
         // The plugin labels the containers it creates, and uses
         // the following labelkey as key to do so.
         // Should normally be left to the default
-        labelKey = 'ch.ayedo.jooqmodelator.tag' // Not required. This is the default
+        labelKey = 'ch.ayedo.jooqmodelator' // Not required. This is the default
     
         // HEALTH CHECK RELATED CONFIGURATION
         

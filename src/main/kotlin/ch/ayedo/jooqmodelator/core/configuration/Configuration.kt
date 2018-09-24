@@ -18,9 +18,11 @@ enum class MigrationEngine {
 }
 
 data class DockerConfig(val tag: String,
-    val labelKey: String = "ch.ayedo.jooqmodelator.tag",
+    val labelKey: String = "ch.ayedo.jooqmodelator",
     val env: List<String>,
     val portMapping: PortMapping) {
+
+    val labelValue = "tag=$tag cport=${portMapping.container} hport=${portMapping.host} env=[${env.joinToString()}]"
 
     fun toContainerConfig(): ContainerConfig? {
         val hostConfig = createHostConfig()
@@ -30,14 +32,14 @@ data class DockerConfig(val tag: String,
             .image(tag)
             .env(env)
             .exposedPorts(portMapping.container.toString())
-            .labels(mapOf(labelKey to tag))
+            .labels(mapOf(labelKey to labelValue))
             .build()
     }
 
     private fun createHostConfig(): HostConfig {
 
-        val defaultPortBinding: PortBinding = PortBinding.of("0.0.0.0", portMapping.container)
-        val portBindings = mapOf(portMapping.host.toString() to listOf(defaultPortBinding))
+        val defaultPortBinding: PortBinding = PortBinding.of("0.0.0.0", portMapping.host)
+        val portBindings = mapOf(portMapping.container.toString() to listOf(defaultPortBinding))
 
         return HostConfig.builder()
             .portBindings(portBindings)

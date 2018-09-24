@@ -3,8 +3,11 @@ package ch.ayedo.jooqmodelator.core
 import ch.ayedo.jooqmodelator.core.configuration.Configuration
 import ch.ayedo.jooqmodelator.core.configuration.DatabaseConfig
 import com.spotify.docker.client.DefaultDockerClient
+import org.slf4j.LoggerFactory
 
 class Modelator(configuration: Configuration) {
+
+    private val log = LoggerFactory.getLogger(Modelator::class.java)
 
     private val dockerConfig = configuration.dockerConfig
 
@@ -26,13 +29,16 @@ class Modelator(configuration: Configuration) {
                 docker.pull(tag)
             }
 
-            val existingContainers = docker.findLabeledContainers(key = dockerConfig.labelKey, value = tag)
+            val existingContainers = docker.findLabeledContainers(key = dockerConfig.labelKey, value = dockerConfig.labelValue)
 
             val containerId =
                 if (existingContainers.isEmpty()) {
                     docker.createContainer(dockerConfig.toContainerConfig()).id()!!
                 } else {
-                    // TODO: warn if more than one found
+                    if (existingContainers.size > 1) {
+                        log.warn("More than one container with tag ${dockerConfig.labelKey}=$tag has been found. " +
+                            "Using the one which was most recently created")
+                    }
                     existingContainers.sortedBy({ it.created() }).map({ it.id() }).first()
                 }
 

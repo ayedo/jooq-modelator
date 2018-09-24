@@ -29,5 +29,5 @@ open class JooqModelatorExtension {
 
     var sql: String = "SELECT 1"
 
-    var labelKey: String = "ch.ayedo.jooqmodelator.tag"
+    var labelKey: String = "ch.ayedo.jooqmodelator"
 }
