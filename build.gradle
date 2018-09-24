@@ -29,7 +29,7 @@ dependencies {
     compile('org.liquibase:liquibase-core:3.6.2') {
         exclude group: 'ch.qos.logback', module: 'logback-classic'
     }
-    compile('org.slf4j:slf4j-api:1.7.25')
+    compile('org.slf4j:slf4j-simple:1.7.25')
 
     testCompile('org.junit.jupiter:junit-jupiter-api:5.2.0')
     testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.0')
