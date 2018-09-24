@@ -5,8 +5,10 @@ plugins {
 
 apply plugin: 'java-gradle-plugin'
 
+project.ext.version = '2.0.1'
+
 group 'ch.ayedo'
-version '2.0.1'
+version project.ext.version
 
 repositories {
     jcenter()
@@ -42,7 +44,7 @@ pluginBundle {
             id = 'ch.ayedo.jooqmodelator'
             displayName = 'Jooq-Modelator'
             description = 'Plugin to generate the jOOQ metamodel from Flyway & Liquibase migrations.'
-            version = "2.0.0"
+            version = project.ext.version
         }
     }
 }
