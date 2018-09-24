@@ -134,6 +134,10 @@ You add your database drivers as follows:
         jooqModelatorRuntime('org.postgresql:postgresql:42.2.4')
     }
 
+### Configuration Changes
+
+When you change the `dockerTag`, `dockerEnv`, `dockerHostPort`, or `dockerContainerPort` a new container will be created. The old one is not deleted.
+
 ## Usage
 
 The plugins adds a task named *generateJooqMetamodel* to your build.
