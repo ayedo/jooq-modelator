@@ -143,12 +143,12 @@ class IntegrationTest {
 
         assertBuildOutcome(UP_TO_DATE)
 
-        assertFileExists("${tempDir.root.absolutePath}ch/ayedo/jooqmodelator/test/tables/Tab.java")
+        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tab.java")
 
     }
 
     @Test
-    fun changePorts() {
+    fun changePortsTest() {
 
         val firstPort = 2346
         val secondPort = 5432

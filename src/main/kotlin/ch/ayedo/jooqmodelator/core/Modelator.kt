@@ -29,20 +29,7 @@ class Modelator(configuration: Configuration) {
                 docker.pull(tag)
             }
 
-            val existingContainers = docker.findLabeledContainers(key = dockerConfig.labelKey, value = tag)
-
-            existingContainers.filter { container ->
-
-                val info = docker.inspectContainer(container.id())
-
-                val portBindings = info.hostConfig()?.portBindings()
-
-                val portBinding = portBindings?.get(dockerConfig.portMapping.container.toString())
-
-                val portsMatch = portBinding?.any { pb -> pb.hostPort() == dockerConfig.portMapping.host.toString() }
-
-                portsMatch ?: false
-            }
+            val existingContainers = docker.findLabeledContainers(key = dockerConfig.labelKey, value = dockerConfig.labelValue)
 
             val containerId =
                 if (existingContainers.isEmpty()) {
