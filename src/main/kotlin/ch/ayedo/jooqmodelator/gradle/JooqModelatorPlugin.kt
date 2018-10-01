@@ -5,6 +5,7 @@ import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import java.nio.file.Paths
 
+
 open class JooqModelatorPlugin : Plugin<Project> {
 
     override fun apply(project: Project) {
@@ -21,7 +22,7 @@ open class JooqModelatorPlugin : Plugin<Project> {
 
             addJooqDependency(project, modelatorRuntime, config)
 
-            project.tasks.create("generateJooqMetamodel", JooqModelatorTask::class.java).apply {
+            val task = project.tasks.create("generateJooqMetamodel", JooqModelatorTask::class.java).apply {
                 description = "Generates the jOOQ metamodel from migrations files using a dockerized database."
 
                 jooqConfigPath = Paths.get(config.jooqConfigPath
@@ -30,8 +31,8 @@ open class JooqModelatorPlugin : Plugin<Project> {
                 jooqOutputPath = Paths.get(config.jooqOutputPath
                     ?: throw IncompletePluginConfigurationException("path to the output directory (jooqOutputDirectory)"))
 
-                migrationsPath = Paths.get(config.migrationsPath
-                    ?: throw IncompletePluginConfigurationException("path to the migration files (migrationsPath)"))
+                migrationsPaths = config.migrationsPaths?.map({ strPath -> Paths.get(strPath) })
+                    ?: throw IncompletePluginConfigurationException("path to the migration files (migrationsPaths)")
 
                 dockerLabelKey = config.labelKey
 
@@ -57,7 +58,14 @@ open class JooqModelatorPlugin : Plugin<Project> {
 
                 jooqClasspath = modelatorRuntime.map { entry -> entry.toURI().toURL() }
             }
+
+            // substitute for @InputDirectories
+            for (migrationPath in task.migrationsPaths) {
+                task.inputs.dir(migrationPath)
+            }
         })
+
+
     }
 
     private fun addJooqDependency(project: Project, modelatorRuntime: Configuration, config: JooqModelatorExtension) {

@@ -12,6 +12,7 @@ import liquibase.resource.FileSystemResourceAccessor
 import org.flywaydb.core.Flyway
 import org.flywaydb.core.internal.util.jdbc.DriverDataSource
 import org.flywaydb.core.internal.util.jdbc.JdbcUtils.openConnection
+import java.io.File
 import java.nio.file.Path
 
 interface Migrator {
@@ -25,19 +26,22 @@ interface Migrator {
     companion object {
         fun fromConfig(migrationConfig: MigrationConfig, databaseConfig: DatabaseConfig) =
             when (migrationConfig.engine) {
-                FLYWAY -> FlywayMigrator(databaseConfig, migrationConfig.migrationsPath)
-                LIQUIBASE -> LiquibaseMigrator(databaseConfig, migrationConfig.migrationsPath)
+                FLYWAY -> FlywayMigrator(databaseConfig, migrationConfig.migrationsPaths)
+                LIQUIBASE -> LiquibaseMigrator(databaseConfig, migrationConfig.migrationsPaths)
             }
     }
 }
 
-class FlywayMigrator(databaseConfig: DatabaseConfig, migrationsPath: Path) : Migrator {
+class FlywayMigrator(databaseConfig: DatabaseConfig, migrationsPaths: List<Path>) : Migrator {
 
     private val flyway = Flyway().apply {
         with(databaseConfig) {
             setDataSource(url, user, password)
         }
-        setLocations("filesystem:$migrationsPath")
+
+        val fileSystemPaths = migrationsPaths.map({ "filesystem:$it" }).toTypedArray()
+
+        setLocations(*fileSystemPaths)
     }
 
     override fun clean() {
@@ -50,7 +54,7 @@ class FlywayMigrator(databaseConfig: DatabaseConfig, migrationsPath: Path) : Mig
 
 }
 
-class LiquibaseMigrator(databaseConfig: DatabaseConfig, migrationsPath: Path) : Migrator {
+class LiquibaseMigrator(databaseConfig: DatabaseConfig, migrationsPaths: List<Path>) : Migrator {
 
     private val liquibase: Liquibase
 
@@ -63,17 +67,19 @@ class LiquibaseMigrator(databaseConfig: DatabaseConfig, migrationsPath: Path) : 
             DatabaseFactory.getInstance().findCorrectDatabaseImplementation(JdbcConnection(connection))
         }
 
-        val changeLogFile = migrationsPath.toFile().listFiles({ pathName -> pathName.nameWithoutExtension == "databaseChangeLog" })
+        val changeLogFiles = migrationsPaths
+            .map({ path -> path.toFile() })
+            .flatMap({ file: File -> file.listFiles({ pathName -> pathName.nameWithoutExtension == "databaseChangeLog" }).toList() })
 
-        if (changeLogFile.isEmpty()) {
+        if (changeLogFiles.isEmpty()) {
             throw IllegalStateException("Cannot find liquibase changelog file. It must be named 'databaseChangeLog'.")
         }
 
-        if (changeLogFile.size > 1) {
-            throw IllegalStateException("More than one file named databaseChangeLog found in migrations folder:\nFiles: ${changeLogFile.joinToString(prefix = "[", separator = ",", postfix = "]") { it.absolutePath }}")
+        if (changeLogFiles.size > 1) {
+            throw IllegalStateException("More than one file named databaseChangeLog found in migrations folders:\nFiles: ${changeLogFiles.joinToString(prefix = "[", separator = ",", postfix = "]") { it.absolutePath }}")
         }
 
-        liquibase = Liquibase(changeLogFile.first().toString(), FileSystemResourceAccessor(), database)
+        liquibase = Liquibase(changeLogFiles.first().toString(), FileSystemResourceAccessor(), database)
     }
 
     override fun clean() {

@@ -9,13 +9,13 @@ import ch.ayedo.jooqmodelator.core.configuration.MigrationEngine
 import ch.ayedo.jooqmodelator.core.configuration.PortMapping
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 import java.net.URL
 import java.net.URLClassLoader
 import java.nio.file.Path
+
 
 open class JooqModelatorTask : DefaultTask() {
 
@@ -25,8 +25,7 @@ open class JooqModelatorTask : DefaultTask() {
     @OutputDirectory
     lateinit var jooqOutputPath: Path
 
-    @InputDirectory
-    lateinit var migrationsPath: Path
+    lateinit var migrationsPaths: List<Path>
 
     @Input
     lateinit var dockerLabelKey: String
@@ -65,7 +64,7 @@ open class JooqModelatorTask : DefaultTask() {
 
         val healthCheckConfig = HealthCheckConfig(delayMs, maxDurationMs, sql)
 
-        val migrationsConfig = MigrationConfig(MigrationEngine.valueOf(migrationEngine), migrationsPath)
+        val migrationsConfig = MigrationConfig(MigrationEngine.valueOf(migrationEngine), migrationsPaths)
 
         val config = Configuration(dockerConfig, healthCheckConfig, migrationsConfig, jooqConfigPath)
 

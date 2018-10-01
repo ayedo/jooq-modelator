@@ -17,8 +17,10 @@ import org.gradle.testkit.runner.TaskOutcome.UP_TO_DATE
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.io.File
+import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.nio.file.StandardCopyOption.REPLACE_EXISTING
 
 
 class IntegrationTest {
@@ -41,7 +43,7 @@ class IntegrationTest {
                 env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
                 portMapping = PortMapping(5432, 5432)),
             healthCheckConfig = HealthCheckConfig(),
-            migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPath = getResourcePath("/migrations")),
+            migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
             jooqConfigPath = jooqConfig.toPath()
         )
 
@@ -51,7 +53,10 @@ class IntegrationTest {
 
         assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tab.java")
 
+        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/TabTwo.java")
+
     }
+
 
     @Test
     fun liquibasePostgres() {
@@ -64,7 +69,7 @@ class IntegrationTest {
                 env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
                 portMapping = PortMapping(5432, 5432)),
             healthCheckConfig = HealthCheckConfig(),
-            migrationConfig = MigrationConfig(engine = MigrationEngine.LIQUIBASE, migrationsPath = getResourcePath("/migrations")),
+            migrationConfig = MigrationConfig(engine = MigrationEngine.LIQUIBASE, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
             jooqConfigPath = jooqConfig.toPath()
         )
 
@@ -73,6 +78,8 @@ class IntegrationTest {
         assertBuildOutcome(SUCCESS)
 
         assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tab.java")
+
+        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/TabTwo.java")
 
     }
 
@@ -87,7 +94,7 @@ class IntegrationTest {
                 env = listOf("MYSQL_DATABASE=maria", "MYSQL_ROOT_PASSWORD=pass", "MYSQL_PASSWORD=pass"),
                 portMapping = PortMapping(3306, 3306)),
             healthCheckConfig = HealthCheckConfig(),
-            migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPath = getResourcePath("/migrations")),
+            migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
             jooqConfigPath = jooqConfig.toPath()
         )
 
@@ -96,6 +103,8 @@ class IntegrationTest {
         assertBuildOutcome(SUCCESS)
 
         assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/maria/tables/Tab.java")
+
+        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/maria/tables/TabTwo.java")
 
     }
 
@@ -110,7 +119,7 @@ class IntegrationTest {
                 env = listOf("MYSQL_DATABASE=maria", "MYSQL_ROOT_PASSWORD=pass", "MYSQL_PASSWORD=pass"),
                 portMapping = PortMapping(3306, 3306)),
             healthCheckConfig = HealthCheckConfig(),
-            migrationConfig = MigrationConfig(engine = MigrationEngine.LIQUIBASE, migrationsPath = getResourcePath("/migrations")),
+            migrationConfig = MigrationConfig(engine = MigrationEngine.LIQUIBASE, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
             jooqConfigPath = jooqConfig.toPath()
         )
 
@@ -119,6 +128,8 @@ class IntegrationTest {
         assertBuildOutcome(SUCCESS)
 
         assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/maria/tables/Tab.java")
+
+        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/maria/tables/TabTwo.java")
 
     }
 
@@ -133,7 +144,7 @@ class IntegrationTest {
                 env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
                 portMapping = PortMapping(5432, 5432)),
             healthCheckConfig = HealthCheckConfig(),
-            migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPath = getResourcePath("/migrations")),
+            migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
             jooqConfigPath = jooqConfig.toPath()
         )
 
@@ -144,6 +155,43 @@ class IntegrationTest {
         assertBuildOutcome(UP_TO_DATE)
 
         assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tab.java")
+
+        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/TabTwo.java")
+
+    }
+
+    @Test
+    fun incrementalBuildChangeFilesTest() {
+
+        val jooqConfig = createJooqConfig(POSTGRES)
+
+        val additionalMigrationsDir = tempDir.newFolder("migrationsC").toPath()
+
+        val config = Configuration(
+            dockerConfig = DockerConfig(
+                tag = "postgres:9.5",
+                env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
+                portMapping = PortMapping(5432, 5432)),
+            healthCheckConfig = HealthCheckConfig(),
+            migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPaths = getMigrationPaths("/migrations") + listOf(additionalMigrationsDir)),
+            jooqConfigPath = jooqConfig.toPath()
+        )
+
+        createBuildFile(config)
+
+        assertBuildOutcome(SUCCESS)
+
+        assertBuildOutcome(UP_TO_DATE)
+
+        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tab.java")
+        assertFileNotExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/TabTwo.java")
+
+        Files.copy(getMigrationPaths("/migrationsB/V2__flyway_test.sql").first(), additionalMigrationsDir.resolve("V2__flyway_test.sql"), REPLACE_EXISTING)
+
+        assertBuildOutcome(SUCCESS)
+
+        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tab.java")
+        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/TabTwo.java")
 
     }
 
@@ -161,7 +209,7 @@ class IntegrationTest {
                 env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
                 portMapping = PortMapping(firstPort, 5432)),
             healthCheckConfig = HealthCheckConfig(),
-            migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPath = getResourcePath("/migrations")),
+            migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
             jooqConfigPath = jooqConfig.toPath()
         )
 
@@ -177,7 +225,7 @@ class IntegrationTest {
                 env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
                 portMapping = PortMapping(secondPort, 5432)),
             healthCheckConfig = HealthCheckConfig(),
-            migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPath = getResourcePath("/migrations")),
+            migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
             jooqConfigPath = newJooqConfig.toPath()
         )
 
@@ -252,6 +300,12 @@ class IntegrationTest {
     """.trimIndent()
 
 
+    private fun getMigrationPaths(vararg paths: String): List<Path> = paths.map({ path -> getResourcePath(path) })
+
+    private fun assertFileNotExists(fileName: String) {
+        Assertions.assertFalse(fileExists(fileName), "File was expected to not exist.")
+    }
+
     private fun assertFileExists(fileName: String) {
         Assertions.assertTrue(fileExists(fileName), "Expected file does not exist.")
     }
@@ -301,7 +355,7 @@ class IntegrationTest {
 
                 jooqOutputPath = '$jooqOutputPath'
 
-                migrationsPath = '${config.migrationConfig.migrationsPath}'
+                migrationsPaths = ${config.migrationConfig.migrationsPaths.joinToString(prefix = "[", postfix = "]") { "'$it'" }}
 
                 dockerTag = '${config.dockerConfig.tag}'
 

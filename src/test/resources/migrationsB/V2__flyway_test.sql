@@ -1,0 +1,3 @@
+CREATE TABLE tabTwo (
+  col INTEGER PRIMARY KEY
+);
