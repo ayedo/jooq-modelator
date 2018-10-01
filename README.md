@@ -39,7 +39,7 @@ Flyway is fully supported.
 __For Liquibase there are limitations:__
 
 - You cannot choose the name of your database change log. __It has to be named 'databaseChangeLog'__. The file ending does not matter, and can be any of the supported file types.
-- All migration files need be located within the configured migrations folder (see section 'Configuration').
+- All migration files need be located within the configured migrations folders (see section 'Configuration'). This is required for incremental build support.
 
 All databases which you can run in a Docker container, and for which a JDBC driver can be provided, are supported. The plugin has been successfully tested with Postgres 9.5, and MariaDB 10.2.
 
@@ -92,8 +92,8 @@ Add the following to your build script:
         // Possible values are: 'FLYWAY', 'LIQUIBASE'
         migrationEngine = 'FLYWAY' // required, this is an example
             
-        // The path to the folder containing the migration files
-        migrationsPath = '/var/folders/temp/migrations' // required, this is an example
+        // a list of paths to the folders containing the migration files
+        migrationsPaths = ['/var/folders/temp/migrations'] // required, this is an example
     
         // DOCKER RELATED CONFIGURATION
         
