@@ -60,7 +60,7 @@ To configure the plugin you need to add two things:
 - A 'jooqModelator' plugin configuration extension (subsection "Plugin Configuration")
 - A 'jooqModelatorRuntime' configuration in the dependencies for your database driver (subsection "Database Configuration") 
 
-For example projects please see Section "Example Projects".
+For example projects please see section "Example Projects".
 
 ### Plugin Configuration
 
@@ -77,7 +77,7 @@ Add the following to your build script:
         jooqVersion = '3.11.4' // required, this is an example
         
         // Which edition of the jooq-generator to be used.
-        // Possible values are: "OSS", "PRO"  "PRO_JAVA_6" "TRIAL"
+        // Possible values are: "OSS", "PRO", "PRO_JAVA_6", or "TRIAL".
         jooqEdition = 'OSS' // required, this is an example
     
         // The path to the XML jooq configuration file
@@ -89,7 +89,7 @@ Add the following to your build script:
         // MIGRATION ENGINE RELATED CONFIGURATION
         
         // Which migration engine to use. 
-        // Possible values are: 'FLYWAY', 'LIQUIBASE'
+        // Possible values are: 'FLYWAY', or 'LIQUIBASE'.
         migrationEngine = 'FLYWAY' // required, this is an example
             
         // a list of paths to the folders containing the migration files
@@ -116,7 +116,7 @@ Add the following to your build script:
         // HEALTH CHECK RELATED CONFIGURATION
         
         // How long to wait in between failed retries. In milliseconds.
-        delayMs = 500 // Not required This is the default
+        delayMs = 500 // Not required. This is the default
     
         // How long to maximally wait for the database to react to the healthcheck. In milliseconds.
         maxDurationMs = 20000 // Not required. This is the default
