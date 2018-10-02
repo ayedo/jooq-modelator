@@ -149,14 +149,15 @@ Please note: the first time you run the plugin it might take a long time to down
 
 ## Example Projects
 
-### Postgres
+### Flyway
 
-Flyway: [click here](https://github.com/ayedo/jooq-modelator-examples/tree/flywayPostgres)
+Postgres: [click here](https://github.com/ayedo/jooq-modelator-examples/tree/flywayPostgres)
 
-Liquibase: [click here](https://github.com/ayedo/jooq-modelator-examples/tree/liquibasePostgres)
+MariaDb: [click here](https://github.com/ayedo/jooq-modelator-examples/tree/flywayMariaDb)
 
-### MariaDb
+### Liquibase
 
-Flyway: [click here](https://github.com/ayedo/jooq-modelator-examples/tree/liquibasePostgres)
+Postgres: [click here](https://github.com/ayedo/jooq-modelator-examples/tree/liquibasePostgres)
 
-Liquibase: [click here](https://github.com/ayedo/jooq-modelator-examples/tree/liquibaseMariaDb)
+MariaDb: [click here](https://github.com/ayedo/jooq-modelator-examples/tree/liquibaseMariaDb)
+
