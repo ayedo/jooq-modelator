@@ -37,7 +37,7 @@ class DatabaseConfig {
 
                 if (config.url == null && config.user == null && config.password == null) {
                     throw IllegalStateException("Could not parse database configuration from jooq configuration file." +
-                        "[jooqConfigPath=${jooqConfigPath.toAbsolutePath()} content=${jooqConfigPath.toFile().readText()}]")
+                        "[unmarshaller=${unmarshaller::class.java} jooqConfigPath=${jooqConfigPath.toAbsolutePath()} content=${jooqConfigPath.toFile().readText()}]")
                 }
 
                 return config
