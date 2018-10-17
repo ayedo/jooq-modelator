@@ -1,26 +1,26 @@
 package ch.ayedo.jooqmodelator.core.configuration
 
+import java.nio.charset.Charset
 import java.nio.file.Path
 import javax.xml.bind.JAXBContext
 import javax.xml.stream.XMLInputFactory
-import javax.xml.transform.stream.StreamSource
 
 /** The database configuration is loaded from the jooq configuration file */
 @javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)
 class DatabaseConfig {
 
     var driver: String? = null
-    lateinit var url: String
-    lateinit var user: String
-    lateinit var password: String
+    var url: String? = null
+    var user: String? = null
+    var password: String? = null
 
     companion object {
 
         fun fromJooqConfig(jooqConfigPath: Path): DatabaseConfig {
 
             val xmlStreamReader = XMLInputFactory.newFactory().let { factory ->
-                val source = StreamSource(jooqConfigPath.toFile())
-                factory.createXMLStreamReader(source)
+                val reader = jooqConfigPath.toFile().reader(Charset.forName("UTF-8"))
+                factory.createXMLStreamReader(reader)
             }
 
             try {
@@ -33,7 +33,14 @@ class DatabaseConfig {
                 val unmarshaller = JAXBContext.newInstance(DatabaseConfig::class.java).createUnmarshaller()
                 val jb = unmarshaller.unmarshal(xmlStreamReader, DatabaseConfig::class.java)
 
-                return jb.value
+                val config = jb.value
+
+                if (config.url == null && config.user == null && config.password == null) {
+                    throw IllegalStateException("Could not parse database configuration from jooq configuration file." +
+                        "[jooqConfigPath=${jooqConfigPath.toAbsolutePath()} content=${jooqConfigPath.toFile().readText()}]")
+                }
+
+                return config
 
             } finally {
                 xmlStreamReader.close()
