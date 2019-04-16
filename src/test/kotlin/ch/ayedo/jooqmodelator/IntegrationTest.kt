@@ -57,6 +57,55 @@ class IntegrationTest {
 
     }
 
+    @Test
+    fun flywayPostgres11() {
+
+        val jooqConfig = createJooqConfig(POSTGRES)
+
+        val config = Configuration(
+            dockerConfig = DockerConfig(
+                tag = "postgres:11",
+                env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
+                portMapping = PortMapping(5432, 5432)),
+            healthCheckConfig = HealthCheckConfig(),
+            migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
+            jooqConfigPath = jooqConfig.toPath()
+        )
+
+        createBuildFile(config)
+
+        assertBuildOutcome(SUCCESS)
+
+        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tab.java")
+
+        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/TabTwo.java")
+
+    }
+
+    @Test
+    fun flywayKartozaPostgis() {
+
+        val jooqConfig = createJooqConfig(POSTGRES, user = "docker", password = "docker", databaseName = "gis", port = 25432)
+
+        val config = Configuration(
+            dockerConfig = DockerConfig(
+                tag = "kartoza/postgis:10.0-2.4",
+                env = listOf("POSTGRES_DBNAME=gis", "POSTGRES_USER=docker", "POSTGRES_PASSWORD=docker"),
+                portMapping = PortMapping(25432, 5432)),
+            healthCheckConfig = HealthCheckConfig(),
+            migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
+            jooqConfigPath = jooqConfig.toPath()
+        )
+
+        createBuildFile(config)
+
+        assertBuildOutcome(SUCCESS)
+
+        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tab.java")
+
+        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/TabTwo.java")
+
+    }
 
     @Test
     fun liquibasePostgres() {
@@ -201,7 +250,7 @@ class IntegrationTest {
         val firstPort = 2346
         val secondPort = 5432
 
-        val jooqConfig = createJooqConfig(POSTGRES, firstPort)
+        val jooqConfig = createJooqConfig(POSTGRES, port = firstPort)
 
         val config = Configuration(
             dockerConfig = DockerConfig(
@@ -217,7 +266,7 @@ class IntegrationTest {
 
         assertBuildOutcome(SUCCESS)
 
-        val newJooqConfig = createJooqConfig(POSTGRES, secondPort)
+        val newJooqConfig = createJooqConfig(POSTGRES, port = secondPort)
 
         val newConfig = Configuration(
             dockerConfig = DockerConfig(
@@ -235,7 +284,12 @@ class IntegrationTest {
 
     }
 
-    private fun createJooqConfig(database: Database, port: Int? = null): File {
+    private fun createJooqConfig(
+        database: Database,
+        databaseName: String? = null,
+        port: Int? = null,
+        user: String? = null,
+        password: String? = null): File {
 
         File("${tempDir.root.absolutePath}/jooqConfig.xml").delete()
 
@@ -243,8 +297,16 @@ class IntegrationTest {
             val configFilePath = tempDir.root.absolutePath
 
             val content = when (database) {
-                POSTGRES -> jooqPostgresConfig(configFilePath, port ?: 5432)
-                MARIADB -> jooqMariaDbConfig(configFilePath, port ?: 3306)
+                POSTGRES -> jooqPostgresConfig(configFilePath,
+                    port ?: 5432,
+                    databaseName ?: "postgres",
+                    user ?: "postgres",
+                    password ?: "secret")
+                MARIADB -> jooqMariaDbConfig(configFilePath,
+                    port ?: 3306,
+                    databaseName ?: "maria",
+                    user ?: "root",
+                    password ?: "pass")
             }
 
             it.writeText(content)
@@ -256,14 +318,14 @@ class IntegrationTest {
         MARIADB
     }
 
-    private fun jooqPostgresConfig(target: String, port: Int = 5432) = """
+    private fun jooqPostgresConfig(target: String, port: Int = 5432, database: String, user: String, password: String) = """
         <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <configuration>
             <jdbc>
                 <driver>org.postgresql.Driver</driver>
-                <url>jdbc:postgresql://localhost:$port/postgres?loggerLevel=OFF</url>
-                <user>postgres</user>
-                <password>secret</password>
+                <url>jdbc:postgresql://localhost:$port/$database?loggerLevel=DEBUG</url>
+                <user>$user</user>
+                <password>$password</password>
             </jdbc>
             <generator>
                 <database>
@@ -278,14 +340,14 @@ class IntegrationTest {
         </configuration>
     """.trimIndent()
 
-    private fun jooqMariaDbConfig(target: String, port: Int = 3306) = """
+    private fun jooqMariaDbConfig(target: String, port: Int = 3306, database: String, user: String, password: String) = """
         <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <configuration>
             <jdbc>
                 <driver>org.mariadb.jdbc.Driver</driver>
-                <url>jdbc:mariadb://localhost:$port/maria</url>
-                <user>root</user>
-                <password>pass</password>
+                <url>jdbc:mariadb://localhost:$port/$database</url>
+                <user>$user</user>
+                <password>$password</password>
             </jdbc>
             <generator>
                 <database>

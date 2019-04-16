@@ -11,7 +11,7 @@ data class DatabaseConfig(val driver: String, val url: String, val user: String,
 
         fun fromJooqConfig(jooqConfigPath: Path): DatabaseConfig {
 
-            val factory = XMLInputFactory.newFactory()
+            val factory = XMLInputFactory.newInstance()
 
             val reader = jooqConfigPath.toFile().reader(Charset.forName("UTF-8"))
 

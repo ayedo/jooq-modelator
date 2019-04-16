@@ -10,8 +10,8 @@ import liquibase.database.DatabaseFactory
 import liquibase.database.jvm.JdbcConnection
 import liquibase.resource.FileSystemResourceAccessor
 import org.flywaydb.core.Flyway
-import org.flywaydb.core.internal.util.jdbc.DriverDataSource
-import org.flywaydb.core.internal.util.jdbc.JdbcUtils.openConnection
+import org.flywaydb.core.internal.jdbc.DriverDataSource
+import org.flywaydb.core.internal.jdbc.JdbcUtils.openConnection
 import java.io.File
 import java.nio.file.Path
 
@@ -34,15 +34,16 @@ interface Migrator {
 
 class FlywayMigrator(databaseConfig: DatabaseConfig, migrationsPaths: List<Path>) : Migrator {
 
-    private val flyway = Flyway().apply {
+    private val flyway = Flyway.configure().apply {
         with(databaseConfig) {
-            setDataSource(url, user, password)
+            dataSource(url, user, password)
         }
+
 
         val fileSystemPaths = migrationsPaths.map({ "filesystem:$it" }).toTypedArray()
 
-        setLocations(*fileSystemPaths)
-    }
+        locations(*fileSystemPaths)
+    }.load()
 
     override fun clean() {
         flyway.clean()
@@ -63,7 +64,7 @@ class LiquibaseMigrator(databaseConfig: DatabaseConfig, migrationsPaths: List<Pa
         val database = with(databaseConfig) {
             // Ugly workaround so that Liquibase uses the contextClassLoader
             val flywayDataSource = DriverDataSource(Thread.currentThread().contextClassLoader, driver, url, user, password, null)
-            val connection = openConnection(flywayDataSource)
+            val connection = openConnection(flywayDataSource, 10)
             DatabaseFactory.getInstance().findCorrectDatabaseImplementation(JdbcConnection(connection))
         }
 

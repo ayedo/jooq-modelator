@@ -3,8 +3,9 @@ package ch.ayedo.jooqmodelator.core
 import ch.ayedo.jooqmodelator.core.configuration.DatabaseConfig
 import ch.ayedo.jooqmodelator.core.configuration.HealthCheckConfig
 import net.jodah.failsafe.RetryPolicy
-import org.flywaydb.core.internal.util.jdbc.DriverDataSource
-import org.flywaydb.core.internal.util.jdbc.JdbcUtils.openConnection
+import org.flywaydb.core.internal.jdbc.DriverDataSource
+import org.flywaydb.core.internal.jdbc.JdbcUtils.openConnection
+import java.sql.Connection
 import java.util.concurrent.TimeUnit.MILLISECONDS
 
 interface HealthChecker {
@@ -25,7 +26,7 @@ class FlywayDependentHealthChecker(databaseConfig: DatabaseConfig, healthCheckCo
     private val sql = healthCheckConfig.sql
 
     private val driverDataSource = with(databaseConfig) {
-        DriverDataSource(Thread.currentThread().contextClassLoader, driver, url, user, password, null, sql)
+        DriverDataSource(Thread.currentThread().contextClassLoader, driver, url, user, password, null)
     }
 
     private val retryPolicy = RetryPolicy().apply {
@@ -39,9 +40,19 @@ class FlywayDependentHealthChecker(databaseConfig: DatabaseConfig, healthCheckCo
 
         net.jodah.failsafe.Failsafe.with<net.jodah.failsafe.RetryPolicy>(retryPolicy).run { ->
 
-            openConnection(driverDataSource).use {
-                it.createStatement().execute(sql)
+            // for some reason 'use' does not work anymore
+            var connection: Connection? = null
+
+            try {
+
+                connection = openConnection(driverDataSource, 10)
+
+                connection.createStatement().execute(sql)
+
+            } finally {
+                connection?.close()
             }
+
         }
     }
 }
