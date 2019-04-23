@@ -5,7 +5,7 @@ plugins {
 
 apply plugin: 'java-gradle-plugin'
 
-project.ext.version = '3.1.0'
+project.ext.version = '3.2.0'
 
 group 'ch.ayedo'
 version project.ext.version
@@ -25,11 +25,14 @@ dependencies {
     compile('org.jetbrains.kotlin:kotlin-stdlib-jdk8')
     compile('net.jodah:failsafe:1.1.0')
     compile('com.spotify:docker-client:8.15.2')
-    compile('org.flywaydb:flyway-core:6.0.0-beta')
+    compile('org.flywaydb:flyway-core:5.2.4')
     compile('org.liquibase:liquibase-core:3.6.3') {
         exclude group: 'ch.qos.logback', module: 'logback-classic'
     }
     compile('org.slf4j:slf4j-simple:1.7.25')
+
+    compile('com.sun.xml.bind:jaxb-impl:2.2.11')
+    compile('com.sun.xml.bind:jaxb-core:2.2.11')
 
     testCompile('org.junit.jupiter:junit-jupiter-api:5.2.0')
     testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.0')

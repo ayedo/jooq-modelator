@@ -58,56 +58,6 @@ class IntegrationTest {
     }
 
     @Test
-    fun flywayPostgres11() {
-
-        val jooqConfig = createJooqConfig(POSTGRES)
-
-        val config = Configuration(
-            dockerConfig = DockerConfig(
-                tag = "postgres:11",
-                env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
-                portMapping = PortMapping(5432, 5432)),
-            healthCheckConfig = HealthCheckConfig(),
-            migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
-            jooqConfigPath = jooqConfig.toPath()
-        )
-
-        createBuildFile(config)
-
-        assertBuildOutcome(SUCCESS)
-
-        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tab.java")
-
-        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/TabTwo.java")
-
-    }
-
-    @Test
-    fun flywayKartozaPostgis() {
-
-        val jooqConfig = createJooqConfig(POSTGRES, user = "docker", password = "docker", databaseName = "gis", port = 25432)
-
-        val config = Configuration(
-            dockerConfig = DockerConfig(
-                tag = "kartoza/postgis:10.0-2.4",
-                env = listOf("POSTGRES_DBNAME=gis", "POSTGRES_USER=docker", "POSTGRES_PASSWORD=docker"),
-                portMapping = PortMapping(25432, 5432)),
-            healthCheckConfig = HealthCheckConfig(),
-            migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
-            jooqConfigPath = jooqConfig.toPath()
-        )
-
-        createBuildFile(config)
-
-        assertBuildOutcome(SUCCESS)
-
-        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tab.java")
-
-        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/TabTwo.java")
-
-    }
-
-    @Test
     fun liquibasePostgres() {
 
         val jooqConfig = createJooqConfig(POSTGRES)

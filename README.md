@@ -31,17 +31,18 @@ The plugin has been tested with Version 18.06.1-ce-mac73 (26764).
 
 Two migration engines are supported:
 
-- Flyway (version '6.0.0-beta')
+- Flyway (version '5.2.4')
 - Liquibase (version '3.6.3')
 
-Flyway is fully supported.
+Flyway is fully supported. Please note that version 3.1.0 of the plugin used the Flyway version '6.0.0-beta'. This was a mistake, and has been
+reset to Flyway 5.2.4 in version 3.2.0. Because of a Flyway related problem, this means that Postgres 11 is currently unsupported when using Flyway. 
 
 __For Liquibase there are limitations:__
 
 - You cannot choose the name of your database change log. __It has to be named 'databaseChangeLog'__. The file ending does not matter, and can be any of the supported file types.
 - All migration files need be located within the configured migrations folders (see section 'Configuration'). This is required for incremental build support.
 
-All databases which you can run in a Docker container, and for which a JDBC driver can be provided, are supported. The plugin has been successfully tested with Postgres 11.2, and MariaDB 10.2.
+All databases which you can run in a Docker container, and for which a JDBC driver can be provided, are supported. The plugin has been successfully tested with Postgres 9.6, and MariaDB 10.2.
 
 Due to backwards incompatible changes in the API, __no jooq generator version older than 3.11.0 is currently supported__.
 
@@ -50,7 +51,7 @@ Due to backwards incompatible changes in the API, __no jooq generator version ol
 Add the following to your *build.gradle* plugin configuration block:
 
     plugins {
-          id 'ch.ayedo.jooqmodelator' version '3.1.0'
+          id 'ch.ayedo.jooqmodelator' version '3.2.0'
     }
 
 ## Configuration
