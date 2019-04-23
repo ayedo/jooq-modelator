@@ -5,7 +5,7 @@ plugins {
 
 apply plugin: 'java-gradle-plugin'
 
-project.ext.version = '3.2.0'
+project.ext.version = '3.3.0'
 
 group 'ch.ayedo'
 version project.ext.version
@@ -31,8 +31,10 @@ dependencies {
     }
     compile('org.slf4j:slf4j-simple:1.7.25')
 
-    compile('com.sun.xml.bind:jaxb-impl:2.2.11')
-    compile('com.sun.xml.bind:jaxb-core:2.2.11')
+    compile('com.sun.xml.bind:jaxb-impl:2.3.0')
+    compile('com.sun.xml.bind:jaxb-core:2.3.0')
+    compile('com.sun.xml.bind:jaxb-impl:2.3.0')
+    compile('javax.activation:activation:1.1.1')
 
     testCompile('org.junit.jupiter:junit-jupiter-api:5.2.0')
     testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.0')

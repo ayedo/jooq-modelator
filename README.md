@@ -35,7 +35,7 @@ Two migration engines are supported:
 - Liquibase (version '3.6.3')
 
 Flyway is fully supported. Please note that version 3.1.0 of the plugin used the Flyway version '6.0.0-beta'. This was a mistake, and has been
-reset to Flyway 5.2.4 in version 3.2.0. Because of a Flyway related problem, this means that Postgres 11 is currently unsupported when using Flyway. 
+reset to Flyway 5.2.4 in version 3.2.0, and later versions. Because of a Flyway related problem, this means that Postgres 11 is currently unsupported when using Flyway. 
 
 __For Liquibase there are limitations:__
 
@@ -51,7 +51,7 @@ Due to backwards incompatible changes in the API, __no jooq generator version ol
 Add the following to your *build.gradle* plugin configuration block:
 
     plugins {
-          id 'ch.ayedo.jooqmodelator' version '3.2.0'
+          id 'ch.ayedo.jooqmodelator' version '3.3.0'
     }
 
 ## Configuration
