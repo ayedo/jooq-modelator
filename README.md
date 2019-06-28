@@ -84,7 +84,9 @@ Add the following to your build script:
         // The path to the XML jooq configuration file
         jooqConfigPath = '/var/folders/temp/jooqConfig.xml' // required, this is an example
     
-        // The path to where the metamodel will be generated to
+        // The path to where the metamodel will be generated to.
+        // Important: this needs to be kept in sync with the path configured in the jooqConfig.xml
+        // the reason it needs to be configured here again is for incremental build support to work
         jooqOutputPath = '/var/folders/temp/ch/acme/metamodel' // required, this is an example
 
         // MIGRATION ENGINE RELATED CONFIGURATION
