@@ -23,7 +23,7 @@ dependencies {
     compile gradleApi()
 
     compile('org.jetbrains.kotlin:kotlin-stdlib-jdk8')
-    compile('net.jodah:failsafe:1.1.0')
+    compile('net.jodah:failsafe:1.1.1')
     compile('com.spotify:docker-client:8.15.2')
     compile('org.flywaydb:flyway-core:5.2.4')
     compile('org.liquibase:liquibase-core:3.6.3') {
