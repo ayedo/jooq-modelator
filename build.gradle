@@ -29,7 +29,7 @@ dependencies {
     compile('org.liquibase:liquibase-core:3.8.0') {
         exclude group: 'ch.qos.logback', module: 'logback-classic'
     }
-    compile('org.slf4j:slf4j-simple:1.7.25')
+    compile('org.slf4j:slf4j-simple:1.7.28')
 
     compile('javax.xml.bind:jaxb-api:2.3.0')
     compile('com.sun.xml.bind:jaxb-core:2.3.0')
