@@ -36,8 +36,8 @@ dependencies {
     compile('javax.activation:activation:1.1.1')
     compile('com.sun.xml.bind:jaxb-impl:2.3.2')
 
-    testCompile('org.junit.jupiter:junit-jupiter-api:5.2.0')
-    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.0')
+    testCompile('org.junit.jupiter:junit-jupiter-api:5.5.1')
+    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.5.1')
 }
 
 pluginBundle {
