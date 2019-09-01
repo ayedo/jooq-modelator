@@ -72,7 +72,7 @@ Add the following to your build script:
         // The version of the jooq-generator that should be used
         // The dependency is added, and loaded dynamically.
         // Only versions 3.11.0 and later are supported.
-        jooqVersion = '3.11.4' // required, this is an example
+        jooqVersion = '3.12.0' // required, this is an example
         
         // Which edition of the jooq-generator to be used.
         // Possible values are: "OSS", "PRO", "PRO_JAVA_6", or "TRIAL".
@@ -98,7 +98,7 @@ Add the following to your build script:
         // DOCKER RELATED CONFIGURATION
         
         // The tag of the image that will be pulled, and used to create the db container
-        dockerTag = 'postgres:9.5' // required, this is an example
+        dockerTag = 'postgres:11.5' // required, this is an example
     
         // The environment variables to be passed to the docker container
         dockerEnv = ['POSTGRES_DB=postgres', 'POSTGRES_USER=postgres', 'POSTGRES_PASSWORD=secret'] // required, this is an example
@@ -131,7 +131,7 @@ You add your database drivers as follows:
 
     dependencies {
         // Add your JDBC drivers, and generator extensions here
-        jooqModelatorRuntime('org.postgresql:postgresql:42.2.4')
+        jooqModelatorRuntime('org.postgresql:postgresql:42.2.6')
     }
 
 ### Configuration Changes
