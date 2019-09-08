@@ -1,11 +1,11 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.3.30'
-    id 'com.gradle.plugin-publish' version '0.10.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.50'
+    id 'com.gradle.plugin-publish' version '0.10.1'
 }
 
 apply plugin: 'java-gradle-plugin'
 
-project.ext.version = '3.5.0'
+project.ext.version = '3.6.0'
 
 group 'ch.ayedo'
 version project.ext.version
@@ -23,21 +23,21 @@ dependencies {
     compile gradleApi()
 
     compile('org.jetbrains.kotlin:kotlin-stdlib-jdk8')
-    compile('net.jodah:failsafe:1.1.0')
-    compile('com.spotify:docker-client:8.15.2')
-    compile('org.flywaydb:flyway-core:5.2.4')
-    compile('org.liquibase:liquibase-core:3.6.3') {
+    compile('net.jodah:failsafe:1.1.1')
+    compile('com.spotify:docker-client:8.16.0')
+    compile('org.flywaydb:flyway-core:6.0.1')
+    compile('org.liquibase:liquibase-core:3.8.0') {
         exclude group: 'ch.qos.logback', module: 'logback-classic'
     }
-    compile('org.slf4j:slf4j-simple:1.7.25')
+    compile('org.slf4j:slf4j-simple:1.7.28')
 
-    compile('javax.xml.bind:jaxb-api:2.3.0')
-    compile('com.sun.xml.bind:jaxb-core:2.3.0')
+    compile('javax.xml.bind:jaxb-api:2.3.1')
+    compile('com.sun.xml.bind:jaxb-core:2.3.0.1')
     compile('javax.activation:activation:1.1.1')
-    compile('com.sun.xml.bind:jaxb-impl:2.3.0')
+    compile('com.sun.xml.bind:jaxb-impl:2.3.2')
 
-    testCompile('org.junit.jupiter:junit-jupiter-api:5.2.0')
-    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.0')
+    testCompile('org.junit.jupiter:junit-jupiter-api:5.5.1')
+    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.5.1')
 }
 
 pluginBundle {
