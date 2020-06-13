@@ -315,7 +315,7 @@ class IntegrationTest {
         env = listOf("MYSQL_DATABASE=maria", "MYSQL_ROOT_PASSWORD=pass", "MYSQL_PASSWORD=pass"),
         portMapping = PortMapping(MARIADB_DEFAULT_PORT, MARIADB_DEFAULT_PORT))
 
-    private fun buildFileFromConfiguration(config: Configuration, jooqOutputPath: String, jooqVersion: String = "3.11.4", jooqEdition: String = "OSS") =
+    private fun buildFileFromConfiguration(config: Configuration, jooqOutputPath: String, jooqVersion: String = "3.13.2", jooqEdition: String = "OSS") =
         """
             plugins {
                 id 'ch.ayedo.jooqmodelator'
