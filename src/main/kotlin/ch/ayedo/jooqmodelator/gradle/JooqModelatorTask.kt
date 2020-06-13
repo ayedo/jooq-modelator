@@ -10,6 +10,7 @@ import ch.ayedo.jooqmodelator.core.configuration.PortMapping
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 import java.net.URL
@@ -25,6 +26,7 @@ open class JooqModelatorTask : DefaultTask() {
     @OutputDirectory
     lateinit var jooqOutputPath: Path
 
+    @InputFiles
     lateinit var migrationsPaths: List<Path>
 
     @Input
