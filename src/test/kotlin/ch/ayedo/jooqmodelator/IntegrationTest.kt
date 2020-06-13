@@ -22,18 +22,20 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption.REPLACE_EXISTING
 
+private const val PG_DEFAULT_PORT = 5432
+private const val MARIADB_DEFAULT_PORT = 3306
 
 class IntegrationTest {
 
-    private fun newPostgresConfig(hostPort: Int = 5432): DockerConfig = DockerConfig(
+    private fun newPostgresConfig(hostPort: Int = PG_DEFAULT_PORT): DockerConfig = DockerConfig(
         tag = "postgres:9.5",
         env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
-        portMapping = PortMapping(hostPort, 5432))
+        portMapping = PortMapping(hostPort, PG_DEFAULT_PORT))
 
     private fun newMariaDbConfig(): DockerConfig = DockerConfig(
         tag = "mariadb:10.2",
         env = listOf("MYSQL_DATABASE=maria", "MYSQL_ROOT_PASSWORD=pass", "MYSQL_PASSWORD=pass"),
-        portMapping = PortMapping(3306, 3306))
+        portMapping = PortMapping(MARIADB_DEFAULT_PORT, MARIADB_DEFAULT_PORT))
 
     @Rule
     private val tempDir = TemporaryFolder().also { it.create() }
@@ -168,7 +170,7 @@ class IntegrationTest {
     fun changePortsTest() {
 
         val firstPort = 2346
-        val secondPort = 5432
+        val secondPort = PG_DEFAULT_PORT
 
         val config = createJooqConfig(POSTGRES, port = firstPort)
             .asConfig(MigrationEngine.FLYWAY) {
@@ -205,12 +207,12 @@ class IntegrationTest {
 
             val content = when (database) {
                 POSTGRES -> jooqPostgresConfig(configFilePath,
-                    port ?: 5432,
+                    port ?: PG_DEFAULT_PORT,
                     databaseName ?: "postgres",
                     user ?: "postgres",
                     password ?: "secret")
                 MARIADB -> jooqMariaDbConfig(configFilePath,
-                    port ?: 3306,
+                    port ?: MARIADB_DEFAULT_PORT,
                     databaseName ?: "maria",
                     user ?: "root",
                     password ?: "pass")
@@ -225,7 +227,7 @@ class IntegrationTest {
         MARIADB
     }
 
-    private fun jooqPostgresConfig(target: String, port: Int = 5432, database: String, user: String, password: String) = """
+    private fun jooqPostgresConfig(target: String, port: Int = PG_DEFAULT_PORT, database: String, user: String, password: String) = """
         <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <configuration>
             <jdbc>
@@ -247,7 +249,7 @@ class IntegrationTest {
         </configuration>
     """.trimIndent()
 
-    private fun jooqMariaDbConfig(target: String, port: Int = 3306, database: String, user: String, password: String) = """
+    private fun jooqMariaDbConfig(target: String, port: Int = MARIADB_DEFAULT_PORT, database: String, user: String, password: String) = """
         <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <configuration>
             <jdbc>
