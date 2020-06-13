@@ -306,7 +306,7 @@ class IntegrationTest {
     }
 
     private fun newPostgresConfig(hostPort: Int = PG_DEFAULT_PORT): DockerConfig = DockerConfig(
-        tag = "postgres:9.5",
+        tag = "postgres:12.3",
         env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
         portMapping = PortMapping(hostPort, PG_DEFAULT_PORT))
 
