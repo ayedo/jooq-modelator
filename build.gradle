@@ -26,7 +26,7 @@ dependencies {
     compile('net.jodah:failsafe:1.1.1')
     compile('com.spotify:docker-client:8.16.0')
     compile('org.flywaydb:flyway-core:6.4.4')
-    compile('org.liquibase:liquibase-core:3.8.0') {
+    compile('org.liquibase:liquibase-core:3.10.0') {
         exclude group: 'ch.qos.logback', module: 'logback-classic'
     }
     compile('org.slf4j:slf4j-api:1.7.30')
