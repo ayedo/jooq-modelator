@@ -60,7 +60,7 @@ class IntegrationTest {
 
         assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tab.java")
 
-        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/TabTwo.java")
+//        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/TabTwo.java")
 
     }
 
@@ -82,7 +82,7 @@ class IntegrationTest {
 
         assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tab.java")
 
-        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/TabTwo.java")
+//        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/TabTwo.java")
 
     }
 
@@ -104,7 +104,7 @@ class IntegrationTest {
 
         assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/maria/tables/Tab.java")
 
-        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/maria/tables/TabTwo.java")
+//        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/maria/tables/TabTwo.java")
 
     }
 
@@ -126,7 +126,7 @@ class IntegrationTest {
 
         assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/maria/tables/Tab.java")
 
-        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/maria/tables/TabTwo.java")
+//        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/maria/tables/TabTwo.java")
 
     }
 
@@ -152,7 +152,7 @@ class IntegrationTest {
 
         assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tab.java")
 
-        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/TabTwo.java")
+//        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/TabTwo.java")
 
     }
 
@@ -184,7 +184,7 @@ class IntegrationTest {
         assertBuildOutcome(SUCCESS)
 
         assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tab.java")
-        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/TabTwo.java")
+//        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/TabTwo.java")
 
     }
 
