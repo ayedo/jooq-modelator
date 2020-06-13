@@ -358,7 +358,7 @@ class IntegrationTest {
             }
 
             dependencies {
-                jooqModelatorRuntime('org.postgresql:postgresql:42.2.4')
+                jooqModelatorRuntime('org.postgresql:postgresql:42.2.14')
                 jooqModelatorRuntime('org.mariadb.jdbc:mariadb-java-client:2.2.6')
             }
 
