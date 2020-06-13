@@ -25,6 +25,16 @@ import java.nio.file.StandardCopyOption.REPLACE_EXISTING
 
 class IntegrationTest {
 
+    private fun newPostgresConfig(hostPort: Int = 5432): DockerConfig = DockerConfig(
+        tag = "postgres:9.5",
+        env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
+        portMapping = PortMapping(hostPort, 5432))
+
+    private fun newMariaDbConfig(): DockerConfig = DockerConfig(
+        tag = "mariadb:10.2",
+        env = listOf("MYSQL_DATABASE=maria", "MYSQL_ROOT_PASSWORD=pass", "MYSQL_PASSWORD=pass"),
+        portMapping = PortMapping(3306, 3306))
+
     @Rule
     private val tempDir = TemporaryFolder().also { it.create() }
 
@@ -38,10 +48,7 @@ class IntegrationTest {
         val jooqConfig = createJooqConfig(POSTGRES)
 
         val config = Configuration(
-            dockerConfig = DockerConfig(
-                tag = "postgres:9.5",
-                env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
-                portMapping = PortMapping(5432, 5432)),
+            dockerConfig = newPostgresConfig(),
             healthCheckConfig = HealthCheckConfig(),
             migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
             jooqConfigPath = jooqConfig.toPath()
@@ -63,10 +70,7 @@ class IntegrationTest {
         val jooqConfig = createJooqConfig(POSTGRES)
 
         val config = Configuration(
-            dockerConfig = DockerConfig(
-                tag = "postgres:9.5",
-                env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
-                portMapping = PortMapping(5432, 5432)),
+            dockerConfig = newPostgresConfig(),
             healthCheckConfig = HealthCheckConfig(),
             migrationConfig = MigrationConfig(engine = MigrationEngine.LIQUIBASE, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
             jooqConfigPath = jooqConfig.toPath()
@@ -88,10 +92,7 @@ class IntegrationTest {
         val jooqConfig = createJooqConfig(MARIADB)
 
         val config = Configuration(
-            dockerConfig = DockerConfig(
-                tag = "mariadb:10.2",
-                env = listOf("MYSQL_DATABASE=maria", "MYSQL_ROOT_PASSWORD=pass", "MYSQL_PASSWORD=pass"),
-                portMapping = PortMapping(3306, 3306)),
+            dockerConfig = newMariaDbConfig(),
             healthCheckConfig = HealthCheckConfig(),
             migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
             jooqConfigPath = jooqConfig.toPath()
@@ -113,10 +114,7 @@ class IntegrationTest {
         val jooqConfig = createJooqConfig(MARIADB)
 
         val config = Configuration(
-            dockerConfig = DockerConfig(
-                tag = "mariadb:10.2",
-                env = listOf("MYSQL_DATABASE=maria", "MYSQL_ROOT_PASSWORD=pass", "MYSQL_PASSWORD=pass"),
-                portMapping = PortMapping(3306, 3306)),
+            dockerConfig = newMariaDbConfig(),
             healthCheckConfig = HealthCheckConfig(),
             migrationConfig = MigrationConfig(engine = MigrationEngine.LIQUIBASE, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
             jooqConfigPath = jooqConfig.toPath()
@@ -132,16 +130,15 @@ class IntegrationTest {
 
     }
 
+
+
     @Test
     fun incrementalBuildTest() {
 
         val jooqConfig = createJooqConfig(POSTGRES)
 
         val config = Configuration(
-            dockerConfig = DockerConfig(
-                tag = "postgres:9.5",
-                env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
-                portMapping = PortMapping(5432, 5432)),
+            dockerConfig = newPostgresConfig(),
             healthCheckConfig = HealthCheckConfig(),
             migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
             jooqConfigPath = jooqConfig.toPath()
@@ -167,10 +164,7 @@ class IntegrationTest {
         val additionalMigrationsDir = tempDir.newFolder("migrationsC").toPath()
 
         val config = Configuration(
-            dockerConfig = DockerConfig(
-                tag = "postgres:9.5",
-                env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
-                portMapping = PortMapping(5432, 5432)),
+            dockerConfig = newPostgresConfig(),
             healthCheckConfig = HealthCheckConfig(),
             migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPaths = getMigrationPaths("/migrations") + listOf(additionalMigrationsDir)),
             jooqConfigPath = jooqConfig.toPath()
@@ -203,10 +197,7 @@ class IntegrationTest {
         val jooqConfig = createJooqConfig(POSTGRES, port = firstPort)
 
         val config = Configuration(
-            dockerConfig = DockerConfig(
-                tag = "postgres:9.5",
-                env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
-                portMapping = PortMapping(firstPort, 5432)),
+            dockerConfig = newPostgresConfig(hostPort = firstPort),
             healthCheckConfig = HealthCheckConfig(),
             migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
             jooqConfigPath = jooqConfig.toPath()
@@ -219,10 +210,7 @@ class IntegrationTest {
         val newJooqConfig = createJooqConfig(POSTGRES, port = secondPort)
 
         val newConfig = Configuration(
-            dockerConfig = DockerConfig(
-                tag = "postgres:9.5",
-                env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
-                portMapping = PortMapping(secondPort, 5432)),
+            dockerConfig = newPostgresConfig(hostPort = secondPort),
             healthCheckConfig = HealthCheckConfig(),
             migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
             jooqConfigPath = newJooqConfig.toPath()
