@@ -58,7 +58,7 @@ class IntegrationTest {
 
         assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tab.java")
 
-//        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/TabTwo.java")
+        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tabtwo.java")
 
     }
 
@@ -76,7 +76,7 @@ class IntegrationTest {
 
         assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tab.java")
 
-//        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/TabTwo.java")
+        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tabtwo.java")
 
     }
 
@@ -94,7 +94,7 @@ class IntegrationTest {
 
         assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/maria/tables/Tab.java")
 
-//        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/maria/tables/TabTwo.java")
+        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/maria/tables/Tabtwo.java")
 
     }
 
@@ -112,7 +112,7 @@ class IntegrationTest {
 
         assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/maria/tables/Tab.java")
 
-//        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/maria/tables/TabTwo.java")
+        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/maria/tables/Tabtwo.java")
 
     }
 
@@ -134,7 +134,7 @@ class IntegrationTest {
 
         assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tab.java")
 
-//        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/TabTwo.java")
+        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tabtwo.java")
 
     }
 
@@ -155,14 +155,14 @@ class IntegrationTest {
         assertBuildOutcome(UP_TO_DATE)
 
         assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tab.java")
-        assertFileNotExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/TabTwo.java")
+        assertFileNotExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tabtwo.java")
 
         Files.copy(migrationsFromResources("/migrationsB/V2__flyway_test.sql").first(), additionalMigrationsDir.resolve("V2__flyway_test.sql"), REPLACE_EXISTING)
 
         assertBuildOutcome(SUCCESS)
 
         assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tab.java")
-//        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/TabTwo.java")
+        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tabtwo.java")
 
     }
 
