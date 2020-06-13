@@ -45,14 +45,10 @@ class IntegrationTest {
     @Test
     fun flywayPostgres() {
 
-        val jooqConfig = createJooqConfig(POSTGRES)
-
-        val config = Configuration(
-            dockerConfig = newPostgresConfig(),
-            healthCheckConfig = HealthCheckConfig(),
-            migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
-            jooqConfigPath = jooqConfig.toPath()
-        )
+        val config = createJooqConfig(POSTGRES)
+            .asConfig(MigrationEngine.FLYWAY) {
+                newPostgresConfig()
+            }
 
         createBuildFile(config)
 
@@ -67,14 +63,10 @@ class IntegrationTest {
     @Test
     fun liquibasePostgres() {
 
-        val jooqConfig = createJooqConfig(POSTGRES)
-
-        val config = Configuration(
-            dockerConfig = newPostgresConfig(),
-            healthCheckConfig = HealthCheckConfig(),
-            migrationConfig = MigrationConfig(engine = MigrationEngine.LIQUIBASE, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
-            jooqConfigPath = jooqConfig.toPath()
-        )
+        val config = createJooqConfig(POSTGRES)
+            .asConfig(MigrationEngine.LIQUIBASE) {
+                newPostgresConfig()
+            }
 
         createBuildFile(config)
 
@@ -89,14 +81,10 @@ class IntegrationTest {
     @Test
     fun flywayMariaDb() {
 
-        val jooqConfig = createJooqConfig(MARIADB)
-
-        val config = Configuration(
-            dockerConfig = newMariaDbConfig(),
-            healthCheckConfig = HealthCheckConfig(),
-            migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
-            jooqConfigPath = jooqConfig.toPath()
-        )
+        val config = createJooqConfig(MARIADB)
+            .asConfig(MigrationEngine.FLYWAY) {
+                newMariaDbConfig()
+            }
 
         createBuildFile(config)
 
@@ -111,14 +99,10 @@ class IntegrationTest {
     @Test
     fun liquibaseMariaDb() {
 
-        val jooqConfig = createJooqConfig(MARIADB)
-
-        val config = Configuration(
-            dockerConfig = newMariaDbConfig(),
-            healthCheckConfig = HealthCheckConfig(),
-            migrationConfig = MigrationConfig(engine = MigrationEngine.LIQUIBASE, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
-            jooqConfigPath = jooqConfig.toPath()
-        )
+        val config = createJooqConfig(MARIADB)
+            .asConfig(MigrationEngine.LIQUIBASE) {
+                newMariaDbConfig()
+            }
 
         createBuildFile(config)
 
@@ -135,14 +119,10 @@ class IntegrationTest {
     @Test
     fun incrementalBuildTest() {
 
-        val jooqConfig = createJooqConfig(POSTGRES)
-
-        val config = Configuration(
-            dockerConfig = newPostgresConfig(),
-            healthCheckConfig = HealthCheckConfig(),
-            migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
-            jooqConfigPath = jooqConfig.toPath()
-        )
+        val config = createJooqConfig(POSTGRES)
+            .asConfig(MigrationEngine.FLYWAY) {
+                newPostgresConfig()
+            }
 
         createBuildFile(config)
 
@@ -159,16 +139,12 @@ class IntegrationTest {
     @Test
     fun incrementalBuildChangeFilesTest() {
 
-        val jooqConfig = createJooqConfig(POSTGRES)
-
         val additionalMigrationsDir = tempDir.newFolder("migrationsC").toPath()
 
-        val config = Configuration(
-            dockerConfig = newPostgresConfig(),
-            healthCheckConfig = HealthCheckConfig(),
-            migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPaths = getMigrationPaths("/migrations") + listOf(additionalMigrationsDir)),
-            jooqConfigPath = jooqConfig.toPath()
-        )
+        val config = createJooqConfig(POSTGRES)
+            .asConfig(MigrationEngine.FLYWAY, listOf(additionalMigrationsDir)) {
+                newPostgresConfig()
+            }
 
         createBuildFile(config)
 
@@ -179,7 +155,7 @@ class IntegrationTest {
         assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tab.java")
         assertFileNotExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/TabTwo.java")
 
-        Files.copy(getMigrationPaths("/migrationsB/V2__flyway_test.sql").first(), additionalMigrationsDir.resolve("V2__flyway_test.sql"), REPLACE_EXISTING)
+        Files.copy(migrationsFromResources("/migrationsB/V2__flyway_test.sql").first(), additionalMigrationsDir.resolve("V2__flyway_test.sql"), REPLACE_EXISTING)
 
         assertBuildOutcome(SUCCESS)
 
@@ -194,27 +170,20 @@ class IntegrationTest {
         val firstPort = 2346
         val secondPort = 5432
 
-        val jooqConfig = createJooqConfig(POSTGRES, port = firstPort)
-
-        val config = Configuration(
-            dockerConfig = newPostgresConfig(hostPort = firstPort),
-            healthCheckConfig = HealthCheckConfig(),
-            migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
-            jooqConfigPath = jooqConfig.toPath()
-        )
+        val config = createJooqConfig(POSTGRES, port = firstPort)
+            .asConfig(MigrationEngine.FLYWAY) {
+                newPostgresConfig(hostPort = firstPort)
+            }
 
         createBuildFile(config)
 
         assertBuildOutcome(SUCCESS)
 
-        val newJooqConfig = createJooqConfig(POSTGRES, port = secondPort)
 
-        val newConfig = Configuration(
-            dockerConfig = newPostgresConfig(hostPort = secondPort),
-            healthCheckConfig = HealthCheckConfig(),
-            migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
-            jooqConfigPath = newJooqConfig.toPath()
-        )
+        val newConfig = createJooqConfig(POSTGRES, port = secondPort)
+            .asConfig(MigrationEngine.FLYWAY) {
+                newPostgresConfig(hostPort = secondPort)
+            }
 
         createBuildFile(newConfig)
 
@@ -300,7 +269,7 @@ class IntegrationTest {
     """.trimIndent()
 
 
-    private fun getMigrationPaths(vararg paths: String): List<Path> = paths.map({ path -> getResourcePath(path) })
+    private fun migrationsFromResources(vararg paths: String): List<Path> = paths.map { path -> getResourcePath(path) }
 
     private fun assertFileNotExists(fileName: String) {
         Assertions.assertFalse(fileExists(fileName), "File was expected to not exist.")
@@ -387,4 +356,21 @@ class IntegrationTest {
             }
 
         """.trimIndent()
+
+    private fun File.asConfig(
+        migrationEngine: MigrationEngine,
+        additionalMigrations : List<Path> = emptyList(),
+        dockerConfigProvider: () -> DockerConfig
+    ): Configuration =
+        Configuration(
+            dockerConfig = dockerConfigProvider(),
+            healthCheckConfig = HealthCheckConfig(),
+            migrationConfig = MigrationConfig(engine = migrationEngine, migrationsPaths = getMigrationPaths(additionalMigrations)),
+            jooqConfigPath = toPath()
+        )
+
+    private fun getMigrationPaths(additionalMigrations : List<Path>) : List<Path> = if (additionalMigrations.isEmpty())
+        migrationsFromResources("/migrations", "/migrationsB")
+    else
+        migrationsFromResources("/migrations") + additionalMigrations
 }
