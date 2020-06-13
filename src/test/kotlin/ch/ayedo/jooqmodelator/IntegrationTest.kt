@@ -269,6 +269,12 @@ class IntegrationTest {
                     <packageName>$jooqPackageName</packageName>
                     <directory>$target</directory>
                 </target>
+                <properties>
+                    <property>
+                        key = 'dialect'
+                        value = 'MARIADB_10_2'
+                    </property>
+                </properties>
             </generator>
         </configuration>
     """.trimIndent()
