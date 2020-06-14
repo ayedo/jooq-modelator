@@ -17,6 +17,7 @@ enum class MigrationEngine {
     LIQUIBASE
 }
 
+@Suppress("SpellCheckingInspection")
 data class DockerConfig(val tag: String,
     val labelKey: String = "ch.ayedo.jooqmodelator",
     val env: List<String>,

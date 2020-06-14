@@ -5,7 +5,7 @@ import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import java.nio.file.Paths
 
-
+@Suppress("SpellCheckingInspection")
 open class JooqModelatorPlugin : Plugin<Project> {
 
     override fun apply(project: Project) {

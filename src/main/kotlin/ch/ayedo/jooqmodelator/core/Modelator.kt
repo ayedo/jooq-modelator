@@ -5,6 +5,7 @@ import ch.ayedo.jooqmodelator.core.configuration.DatabaseConfig
 import com.spotify.docker.client.DefaultDockerClient
 import org.slf4j.LoggerFactory
 
+@Suppress("SpellCheckingInspection")
 class Modelator(configuration: Configuration) {
 
     private val log = LoggerFactory.getLogger(Modelator::class.java)

@@ -1,6 +1,7 @@
 package ch.ayedo.jooqmodelator.gradle
 
 
+@Suppress("SpellCheckingInspection")
 open class JooqModelatorExtension {
 
     var jooqVersion: String? = null

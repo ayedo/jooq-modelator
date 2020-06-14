@@ -15,6 +15,7 @@ import org.flywaydb.core.internal.jdbc.JdbcUtils.openConnection
 import java.io.File
 import java.nio.file.Path
 
+@Suppress("SpellCheckingInspection")
 interface Migrator {
 
     /* deletes all objects in the database */

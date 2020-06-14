@@ -18,6 +18,7 @@ import java.net.URLClassLoader
 import java.nio.file.Path
 
 
+@Suppress("SpellCheckingInspection")
 open class JooqModelatorTask : DefaultTask() {
 
     @InputFile

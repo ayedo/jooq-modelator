@@ -36,6 +36,7 @@ class FlywayDependentHealthChecker(databaseConfig: DatabaseConfig, healthCheckCo
         withMaxDuration(maxDurationMs, MILLISECONDS)
     }
 
+    @Suppress("RedundantLambdaArrow")
     override fun waitForDatabase() {
 
         net.jodah.failsafe.Failsafe.with<RetryPolicy>(retryPolicy).run { _ ->
