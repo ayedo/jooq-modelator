@@ -39,7 +39,7 @@ class Modelator(configuration: Configuration) {
                         log.warn("More than one container with tag ${dockerConfig.labelKey}=$tag has been found. " +
                             "Using the one which was most recently created")
                     }
-                    existingContainers.sortedBy({ it.created() }).map({ it.id() }).first()
+                    existingContainers.sortedBy { it.created() }.map { it.id() }.first()
                 }
 
             docker.useContainer(containerId) {
