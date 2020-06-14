@@ -29,7 +29,7 @@ open class JooqModelatorPlugin : Plugin<Project> {
                     ?: throw IncompletePluginConfigurationException("path to the jOOQ generator configuration (jooqConfigPath)"))
 
                 jooqOutputPath = Paths.get(config.jooqOutputPath
-                    ?: throw IncompletePluginConfigurationException("path to the output directory (jooqOutputDirectory)"))
+                    ?: throw IncompletePluginConfigurationException("path to the output directory (jooqOutputPath)"))
 
                 migrationsPaths = config.migrationsPaths?.map({ strPath -> Paths.get(strPath) })
                     ?: throw IncompletePluginConfigurationException("path to the migration files (migrationsPaths)")
