@@ -5,7 +5,7 @@ import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import java.nio.file.Paths
 
-
+@Suppress("SpellCheckingInspection")
 open class JooqModelatorPlugin : Plugin<Project> {
 
     override fun apply(project: Project) {
@@ -16,7 +16,7 @@ open class JooqModelatorPlugin : Plugin<Project> {
 
         modelatorRuntime.description = "Add JDBC drivers or generator extensions here."
 
-        project.afterEvaluate({
+        project.afterEvaluate {
 
             val config = project.extensions.findByType(JooqModelatorExtension::class.java)!!
 
@@ -29,9 +29,9 @@ open class JooqModelatorPlugin : Plugin<Project> {
                     ?: throw IncompletePluginConfigurationException("path to the jOOQ generator configuration (jooqConfigPath)"))
 
                 jooqOutputPath = Paths.get(config.jooqOutputPath
-                    ?: throw IncompletePluginConfigurationException("path to the output directory (jooqOutputDirectory)"))
+                    ?: throw IncompletePluginConfigurationException("path to the output directory (jooqOutputPath)"))
 
-                migrationsPaths = config.migrationsPaths?.map({ strPath -> Paths.get(strPath) })
+                migrationsPaths = config.migrationsPaths?.map { strPath -> Paths.get(strPath) }
                     ?: throw IncompletePluginConfigurationException("path to the migration files (migrationsPaths)")
 
                 dockerLabelKey = config.labelKey
@@ -63,7 +63,7 @@ open class JooqModelatorPlugin : Plugin<Project> {
             for (migrationPath in task.migrationsPaths) {
                 task.inputs.dir(migrationPath)
             }
-        })
+        }
 
 
     }

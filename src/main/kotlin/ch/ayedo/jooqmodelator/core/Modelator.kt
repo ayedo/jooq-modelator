@@ -5,6 +5,7 @@ import ch.ayedo.jooqmodelator.core.configuration.DatabaseConfig
 import com.spotify.docker.client.DefaultDockerClient
 import org.slf4j.LoggerFactory
 
+@Suppress("SpellCheckingInspection")
 class Modelator(configuration: Configuration) {
 
     private val log = LoggerFactory.getLogger(Modelator::class.java)
@@ -39,7 +40,7 @@ class Modelator(configuration: Configuration) {
                         log.warn("More than one container with tag ${dockerConfig.labelKey}=$tag has been found. " +
                             "Using the one which was most recently created")
                     }
-                    existingContainers.sortedBy({ it.created() }).map({ it.id() }).first()
+                    existingContainers.sortedBy { it.created() }.map { it.id() }.first()
                 }
 
             docker.useContainer(containerId) {

@@ -1,3 +1,5 @@
+@file:Suppress("SpellCheckingInspection")
+
 package ch.ayedo.jooqmodelator
 
 import ch.ayedo.jooqmodelator.IntegrationTest.Database.MARIADB
@@ -22,8 +24,43 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption.REPLACE_EXISTING
 
+private const val DEFAULT_JOOQ_VERSION = "3.13.2"
+private const val PG_DRIVER_VERSION = "42.2.14"
+private const val MARIADB_DRIVER_VERSION = "2.6.0"
 
 class IntegrationTest {
+
+    private enum class Database(
+        val version: String,
+        val defaultPort: Int,
+        val db: String,
+        val user: String,
+        val password: String,
+        val rootPassword: String = "",
+        private val dialectVersion: String? = version.replace(".", "_"),
+        private val subdir: String = ""
+    ) {
+        POSTGRES(
+            version = "12.3",
+            defaultPort = 5432,
+            db = "postgres",
+            user = "postgres",
+            password = "secret",
+            dialectVersion = null
+        ),
+        MARIADB(
+            version = "10.2",
+            defaultPort = 3306,
+            db = "maria",
+            user = "root",
+            password = "pass",
+            rootPassword = "pass",
+            subdir = "maria"
+        );
+
+        val subdirPath get() = "/$subdir"
+        val dialect get() = dialectVersion?.let { "name_$dialectVersion" } ?: name
+    }
 
     @Rule
     private val tempDir = TemporaryFolder().also { it.create() }
@@ -35,117 +72,79 @@ class IntegrationTest {
     @Test
     fun flywayPostgres() {
 
-        val jooqConfig = createJooqConfig(POSTGRES)
-
-        val config = Configuration(
-            dockerConfig = DockerConfig(
-                tag = "postgres:9.5",
-                env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
-                portMapping = PortMapping(5432, 5432)),
-            healthCheckConfig = HealthCheckConfig(),
-            migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
-            jooqConfigPath = jooqConfig.toPath()
-        )
+        val database = POSTGRES
+        val config = createJooqConfig(database)
+            .asConfig(MigrationEngine.FLYWAY) {
+                newPostgresConfig()
+            }
 
         createBuildFile(config)
 
         assertBuildOutcome(SUCCESS)
 
-        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tab.java")
-
-        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/TabTwo.java")
+        assertExistingTables(database, "Tab", "Tabtwo")
 
     }
 
     @Test
     fun liquibasePostgres() {
-
-        val jooqConfig = createJooqConfig(POSTGRES)
-
-        val config = Configuration(
-            dockerConfig = DockerConfig(
-                tag = "postgres:9.5",
-                env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
-                portMapping = PortMapping(5432, 5432)),
-            healthCheckConfig = HealthCheckConfig(),
-            migrationConfig = MigrationConfig(engine = MigrationEngine.LIQUIBASE, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
-            jooqConfigPath = jooqConfig.toPath()
-        )
+        val database = POSTGRES
+        val config = createJooqConfig(database)
+            .asConfig(MigrationEngine.LIQUIBASE) {
+                newPostgresConfig()
+            }
 
         createBuildFile(config)
 
         assertBuildOutcome(SUCCESS)
 
-        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tab.java")
-
-        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/TabTwo.java")
+        assertExistingTables(database, "Tab", "Tabtwo")
 
     }
 
     @Test
     fun flywayMariaDb() {
 
-        val jooqConfig = createJooqConfig(MARIADB)
-
-        val config = Configuration(
-            dockerConfig = DockerConfig(
-                tag = "mariadb:10.2",
-                env = listOf("MYSQL_DATABASE=maria", "MYSQL_ROOT_PASSWORD=pass", "MYSQL_PASSWORD=pass"),
-                portMapping = PortMapping(3306, 3306)),
-            healthCheckConfig = HealthCheckConfig(),
-            migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
-            jooqConfigPath = jooqConfig.toPath()
-        )
+        val database = MARIADB
+        val config = createJooqConfig(database)
+            .asConfig(MigrationEngine.FLYWAY) {
+                newMariaDbConfig()
+            }
 
         createBuildFile(config)
 
         assertBuildOutcome(SUCCESS)
 
-        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/maria/tables/Tab.java")
-
-        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/maria/tables/TabTwo.java")
+        assertExistingTables(database, "Tab", "Tabtwo")
 
     }
 
     @Test
     fun liquibaseMariaDb() {
 
-        val jooqConfig = createJooqConfig(MARIADB)
-
-        val config = Configuration(
-            dockerConfig = DockerConfig(
-                tag = "mariadb:10.2",
-                env = listOf("MYSQL_DATABASE=maria", "MYSQL_ROOT_PASSWORD=pass", "MYSQL_PASSWORD=pass"),
-                portMapping = PortMapping(3306, 3306)),
-            healthCheckConfig = HealthCheckConfig(),
-            migrationConfig = MigrationConfig(engine = MigrationEngine.LIQUIBASE, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
-            jooqConfigPath = jooqConfig.toPath()
-        )
+        val database = MARIADB
+        val config = createJooqConfig(database)
+            .asConfig(MigrationEngine.LIQUIBASE) {
+                newMariaDbConfig()
+            }
 
         createBuildFile(config)
 
         assertBuildOutcome(SUCCESS)
 
-        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/maria/tables/Tab.java")
-
-        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/maria/tables/TabTwo.java")
+        assertExistingTables(database, "Tab", "Tabtwo")
 
     }
+
 
     @Test
     fun incrementalBuildTest() {
 
-        val jooqConfig = createJooqConfig(POSTGRES)
-
-        val config = Configuration(
-            dockerConfig = DockerConfig(
-                tag = "postgres:9.5",
-                env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
-                portMapping = PortMapping(5432, 5432)),
-            healthCheckConfig = HealthCheckConfig(),
-            migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
-            jooqConfigPath = jooqConfig.toPath()
-        )
+        val database = POSTGRES
+        val config = createJooqConfig(database)
+            .asConfig(MigrationEngine.FLYWAY) {
+                newPostgresConfig()
+            }
 
         createBuildFile(config)
 
@@ -153,28 +152,20 @@ class IntegrationTest {
 
         assertBuildOutcome(UP_TO_DATE)
 
-        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tab.java")
-
-        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/TabTwo.java")
+        assertExistingTables(database, "Tab", "Tabtwo")
 
     }
 
     @Test
     fun incrementalBuildChangeFilesTest() {
 
-        val jooqConfig = createJooqConfig(POSTGRES)
-
         val additionalMigrationsDir = tempDir.newFolder("migrationsC").toPath()
 
-        val config = Configuration(
-            dockerConfig = DockerConfig(
-                tag = "postgres:9.5",
-                env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
-                portMapping = PortMapping(5432, 5432)),
-            healthCheckConfig = HealthCheckConfig(),
-            migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPaths = getMigrationPaths("/migrations") + listOf(additionalMigrationsDir)),
-            jooqConfigPath = jooqConfig.toPath()
-        )
+        val database = POSTGRES
+        val config = createJooqConfig(database)
+            .asConfig(MigrationEngine.FLYWAY, listOf(additionalMigrationsDir)) {
+                newPostgresConfig()
+            }
 
         createBuildFile(config)
 
@@ -182,51 +173,53 @@ class IntegrationTest {
 
         assertBuildOutcome(UP_TO_DATE)
 
-        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tab.java")
-        assertFileNotExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/TabTwo.java")
+        assertExistingTables(database, "Tab")
+        assertNotExistingTables(database, "Tabtwo")
 
-        Files.copy(getMigrationPaths("/migrationsB/V2__flyway_test.sql").first(), additionalMigrationsDir.resolve("V2__flyway_test.sql"), REPLACE_EXISTING)
+        Files.copy(migrationsFromResources("/migrationsB/V2__flyway_test.sql").first(), additionalMigrationsDir.resolve("V2__flyway_test.sql"), REPLACE_EXISTING)
 
         assertBuildOutcome(SUCCESS)
 
-        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/Tab.java")
-        assertFileExists("${tempDir.root.absolutePath}$jooqPackagePath/tables/TabTwo.java")
+        assertExistingTables(database, "Tabtwo")
 
     }
+
+    private fun assertExistingTables(database: Database, vararg tableNames: String) =
+        tableNames.forEach {
+            Assertions.assertTrue(
+                fileExists("${tempDir.root.absolutePath}$jooqPackagePath${database.subdirPath}/tables/$it.java"),
+                "Expected file does not exist."
+            )
+        }
+
+    private fun assertNotExistingTables(database: Database, vararg tableNames: String) =
+        tableNames.forEach {
+            Assertions.assertFalse(
+                fileExists("${tempDir.root.absolutePath}$jooqPackagePath${database.subdirPath}/tables/$it.java"),
+                "File was expected to not exist."
+            )
+        }
 
     @Test
     fun changePortsTest() {
 
         val firstPort = 2346
-        val secondPort = 5432
+        val secondPort = POSTGRES.defaultPort
 
-        val jooqConfig = createJooqConfig(POSTGRES, port = firstPort)
-
-        val config = Configuration(
-            dockerConfig = DockerConfig(
-                tag = "postgres:9.5",
-                env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
-                portMapping = PortMapping(firstPort, 5432)),
-            healthCheckConfig = HealthCheckConfig(),
-            migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
-            jooqConfigPath = jooqConfig.toPath()
-        )
+        val config = createJooqConfig(POSTGRES, port = firstPort)
+            .asConfig(MigrationEngine.FLYWAY) {
+                newPostgresConfig(hostPort = firstPort)
+            }
 
         createBuildFile(config)
 
         assertBuildOutcome(SUCCESS)
 
-        val newJooqConfig = createJooqConfig(POSTGRES, port = secondPort)
 
-        val newConfig = Configuration(
-            dockerConfig = DockerConfig(
-                tag = "postgres:9.5",
-                env = listOf("POSTGRES_DB=postgres", "POSTGRES_USER=postgres", "POSTGRES_PASSWORD=secret"),
-                portMapping = PortMapping(secondPort, 5432)),
-            healthCheckConfig = HealthCheckConfig(),
-            migrationConfig = MigrationConfig(engine = MigrationEngine.FLYWAY, migrationsPaths = getMigrationPaths("/migrations", "/migrationsB")),
-            jooqConfigPath = newJooqConfig.toPath()
-        )
+        val newConfig = createJooqConfig(POSTGRES, port = secondPort)
+            .asConfig(MigrationEngine.FLYWAY) {
+                newPostgresConfig(hostPort = secondPort)
+            }
 
         createBuildFile(newConfig)
 
@@ -236,10 +229,12 @@ class IntegrationTest {
 
     private fun createJooqConfig(
         database: Database,
-        databaseName: String? = null,
-        port: Int? = null,
-        user: String? = null,
-        password: String? = null): File {
+        databaseName: String = database.db,
+        port: Int = database.defaultPort,
+        user: String = database.user,
+        password: String = database.password,
+        dialect: String = database.dialect
+    ): File {
 
         File("${tempDir.root.absolutePath}/jooqConfig.xml").delete()
 
@@ -247,28 +242,15 @@ class IntegrationTest {
             val configFilePath = tempDir.root.absolutePath
 
             val content = when (database) {
-                POSTGRES -> jooqPostgresConfig(configFilePath,
-                    port ?: 5432,
-                    databaseName ?: "postgres",
-                    user ?: "postgres",
-                    password ?: "secret")
-                MARIADB -> jooqMariaDbConfig(configFilePath,
-                    port ?: 3306,
-                    databaseName ?: "maria",
-                    user ?: "root",
-                    password ?: "pass")
+                POSTGRES -> jooqPostgresConfig(configFilePath, port, databaseName, user, password, dialect)
+                MARIADB -> jooqMariaDbConfig(configFilePath, port, databaseName, user, password, dialect)
             }
 
             it.writeText(content)
         }
     }
 
-    private enum class Database {
-        POSTGRES,
-        MARIADB
-    }
-
-    private fun jooqPostgresConfig(target: String, port: Int = 5432, database: String, user: String, password: String) = """
+    private fun jooqPostgresConfig(target: String, port: Int = POSTGRES.defaultPort, database: String, user: String, password: String, dialect: String) = """
         <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <configuration>
             <jdbc>
@@ -286,11 +268,17 @@ class IntegrationTest {
                     <packageName>$jooqPackageName</packageName>
                     <directory>$target</directory>
                 </target>
+                <properties>
+                    <property>
+                        key = 'dialect'
+                        value = '$dialect'
+                    </property>
+                </properties>
             </generator>
         </configuration>
     """.trimIndent()
 
-    private fun jooqMariaDbConfig(target: String, port: Int = 3306, database: String, user: String, password: String) = """
+    private fun jooqMariaDbConfig(target: String, port: Int = MARIADB.defaultPort, database: String, user: String, password: String, dialect: String) = """
         <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <configuration>
             <jdbc>
@@ -307,20 +295,18 @@ class IntegrationTest {
                     <packageName>$jooqPackageName</packageName>
                     <directory>$target</directory>
                 </target>
+                <properties>
+                    <property>
+                        key = 'dialect'
+                        value = '$dialect'
+                    </property>
+                </properties>
             </generator>
         </configuration>
     """.trimIndent()
 
 
-    private fun getMigrationPaths(vararg paths: String): List<Path> = paths.map({ path -> getResourcePath(path) })
-
-    private fun assertFileNotExists(fileName: String) {
-        Assertions.assertFalse(fileExists(fileName), "File was expected to not exist.")
-    }
-
-    private fun assertFileExists(fileName: String) {
-        Assertions.assertTrue(fileExists(fileName), "Expected file does not exist.")
-    }
+    private fun migrationsFromResources(vararg paths: String): List<Path> = paths.map { path -> getResourcePath(path) }
 
     private fun fileExists(fileName: String) = File(fileName).exists()
 
@@ -351,7 +337,17 @@ class IntegrationTest {
         println(result.output)
     }
 
-    private fun buildFileFromConfiguration(config: Configuration, jooqOutputPath: String, jooqVersion: String = "3.11.4", jooqEdition: String = "OSS") =
+    private fun newPostgresConfig(hostPort: Int = POSTGRES.defaultPort): DockerConfig = DockerConfig(
+        tag = "postgres:${POSTGRES.version}",
+        env = listOf("POSTGRES_DB=${POSTGRES.db}", "POSTGRES_USER=${POSTGRES.user}", "POSTGRES_PASSWORD=${POSTGRES.password}"),
+        portMapping = PortMapping(hostPort, POSTGRES.defaultPort))
+
+    private fun newMariaDbConfig(): DockerConfig = DockerConfig(
+        tag = "mariadb:${MARIADB.version}",
+        env = listOf("MYSQL_DATABASE=${MARIADB.db}", "MYSQL_ROOT_PASSWORD=${MARIADB.rootPassword}", "MYSQL_PASSWORD=${MARIADB.password}"),
+        portMapping = PortMapping(MARIADB.defaultPort, MARIADB.defaultPort))
+
+    private fun buildFileFromConfiguration(config: Configuration, jooqOutputPath: String, jooqVersion: String = DEFAULT_JOOQ_VERSION, jooqEdition: String = "OSS") =
         """
             plugins {
                 id 'ch.ayedo.jooqmodelator'
@@ -394,9 +390,26 @@ class IntegrationTest {
             }
 
             dependencies {
-                jooqModelatorRuntime('org.postgresql:postgresql:42.2.4')
-                jooqModelatorRuntime('org.mariadb.jdbc:mariadb-java-client:2.2.6')
+                jooqModelatorRuntime('org.postgresql:postgresql:$PG_DRIVER_VERSION')
+                jooqModelatorRuntime('org.mariadb.jdbc:mariadb-java-client:$MARIADB_DRIVER_VERSION')
             }
 
         """.trimIndent()
+
+    private fun File.asConfig(
+        migrationEngine: MigrationEngine,
+        additionalMigrations: List<Path> = emptyList(),
+        dockerConfigProvider: () -> DockerConfig
+    ): Configuration =
+        Configuration(
+            dockerConfig = dockerConfigProvider(),
+            healthCheckConfig = HealthCheckConfig(),
+            migrationConfig = MigrationConfig(engine = migrationEngine, migrationsPaths = getMigrationPaths(additionalMigrations)),
+            jooqConfigPath = toPath()
+        )
+
+    private fun getMigrationPaths(additionalMigrations: List<Path>): List<Path> = if (additionalMigrations.isEmpty())
+        migrationsFromResources("/migrations", "/migrationsB")
+    else
+        migrationsFromResources("/migrations") + additionalMigrations
 }

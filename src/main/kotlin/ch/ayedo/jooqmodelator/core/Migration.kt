@@ -15,6 +15,7 @@ import org.flywaydb.core.internal.jdbc.JdbcUtils.openConnection
 import java.io.File
 import java.nio.file.Path
 
+@Suppress("SpellCheckingInspection")
 interface Migrator {
 
     /* deletes all objects in the database */
@@ -69,8 +70,8 @@ class LiquibaseMigrator(databaseConfig: DatabaseConfig, migrationsPaths: List<Pa
         }
 
         val changeLogFiles = migrationsPaths
-            .map({ path -> path.toFile() })
-            .flatMap({ file: File -> file.listFiles({ pathName -> pathName.nameWithoutExtension == "databaseChangeLog" }).toList() })
+            .map { path -> path.toFile() }
+            .flatMap { file: File -> file.listFiles { pathName -> pathName.nameWithoutExtension == "databaseChangeLog" }?.toList() ?: emptyList() }
 
         if (changeLogFiles.isEmpty()) {
             throw IllegalStateException("Cannot find liquibase changelog file. It must be named 'databaseChangeLog'.")

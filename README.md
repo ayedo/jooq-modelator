@@ -1,6 +1,9 @@
 Jooq-Modelator
 ==============
 
+[![GitHub license](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://raw.githubusercontent.com/ayedo/jooq-modelator/master/LICENSE)
+[![Build Status](https://github.com/ayedo/jooq-modelator/workflows/Build/badge.svg)](https://github.com/ayedo/jooq-modelator/actions)
+
 ## Overview
 
 This gradle plugin generates Jooq metamodel classes from Flyway & Liquibase migration files. It does so by running them against a dockerized database, and then running the Jooq generator against that database.
@@ -31,8 +34,8 @@ The plugin has been tested with Version 18.06.1-ce-mac73 (26764).
 
 Two migration engines are supported:
 
-- Flyway (version '6.0.1')
-- Liquibase (version '3.8.0')
+- Flyway (version '6.4.4')
+- Liquibase (version '3.10.0')
 
 __For Liquibase there are limitations:__
 

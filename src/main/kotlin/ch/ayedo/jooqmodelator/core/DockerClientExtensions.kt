@@ -20,6 +20,6 @@ fun <T> DockerClient.useContainer(containerId: String, fn: () -> T) =
 
 fun DockerClient.findLabeledContainers(key: String, value: String) =
     this.listContainers(allContainers())
-        .filter({ container ->
+        .filter { container ->
             container.labels()?.get(key) == value
-        })
+        }
