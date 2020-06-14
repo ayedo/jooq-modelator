@@ -38,7 +38,7 @@ class FlywayDependentHealthChecker(databaseConfig: DatabaseConfig, healthCheckCo
 
     override fun waitForDatabase() {
 
-        net.jodah.failsafe.Failsafe.with<net.jodah.failsafe.RetryPolicy>(retryPolicy).run { ->
+        net.jodah.failsafe.Failsafe.with<RetryPolicy>(retryPolicy).run { _ ->
 
             // for some reason 'use' does not work anymore
             var connection: Connection? = null
