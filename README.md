@@ -2,7 +2,8 @@ Jooq-Modelator
 ==============
 
 [![GitHub license](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://raw.githubusercontent.com/ayedo/jooq-modelator/master/LICENSE)
-[![Build Status](https://github.com/ayedo/jooq-modelator/workflows/Build/badge.svg)](https://github.com/ayedo/jooq-modelator/actions)
+
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/ayedo/jooq-modelator/Check)
 
 ## Overview
 
