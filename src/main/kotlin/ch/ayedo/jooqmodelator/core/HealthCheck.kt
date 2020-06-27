@@ -6,7 +6,7 @@ import net.jodah.failsafe.RetryPolicy
 import org.flywaydb.core.internal.jdbc.DriverDataSource
 import org.flywaydb.core.internal.jdbc.JdbcUtils.openConnection
 import java.sql.Connection
-import java.util.concurrent.TimeUnit.MILLISECONDS
+import java.time.Duration
 
 interface HealthChecker {
 
@@ -29,17 +29,17 @@ class FlywayDependentHealthChecker(databaseConfig: DatabaseConfig, healthCheckCo
         DriverDataSource(Thread.currentThread().contextClassLoader, driver, url, user, password, null)
     }
 
-    private val retryPolicy = RetryPolicy().apply {
+    private val retryPolicy = RetryPolicy<Boolean>().apply {
         val (delayMs, maxDurationMs) = healthCheckConfig
 
-        withDelay(delayMs, MILLISECONDS)
-        withMaxDuration(maxDurationMs, MILLISECONDS)
+        withDelay(Duration.ofMillis(delayMs))
+        withMaxDuration(Duration.ofMillis(maxDurationMs))
     }
 
     @Suppress("RedundantLambdaArrow")
     override fun waitForDatabase() {
 
-        net.jodah.failsafe.Failsafe.with<RetryPolicy>(retryPolicy).run { _ ->
+        net.jodah.failsafe.Failsafe.with(retryPolicy).run { _ ->
 
             // for some reason 'use' does not work anymore
             var connection: Connection? = null
