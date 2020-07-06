@@ -9,6 +9,8 @@ import ch.ayedo.jooqmodelator.core.configuration.DockerConfig
 import ch.ayedo.jooqmodelator.core.configuration.HealthCheckConfig
 import ch.ayedo.jooqmodelator.core.configuration.MigrationConfig
 import ch.ayedo.jooqmodelator.core.configuration.MigrationEngine
+import ch.ayedo.jooqmodelator.core.configuration.MigrationEngine.FLYWAY
+import ch.ayedo.jooqmodelator.core.configuration.MigrationEngine.LIQUIBASE
 import ch.ayedo.jooqmodelator.core.configuration.PortMapping
 import org.gradle.internal.impldep.org.junit.Rule
 import org.gradle.internal.impldep.org.junit.rules.TemporaryFolder
@@ -74,7 +76,7 @@ class IntegrationTest {
 
         val database = POSTGRES
         val config = createJooqConfig(database)
-            .asConfig(MigrationEngine.FLYWAY) {
+            .asConfig(FLYWAY) {
                 newPostgresConfig()
             }
 
@@ -90,7 +92,7 @@ class IntegrationTest {
     fun liquibasePostgres() {
         val database = POSTGRES
         val config = createJooqConfig(database)
-            .asConfig(MigrationEngine.LIQUIBASE) {
+            .asConfig(LIQUIBASE) {
                 newPostgresConfig()
             }
 
@@ -107,7 +109,7 @@ class IntegrationTest {
 
         val database = MARIADB
         val config = createJooqConfig(database)
-            .asConfig(MigrationEngine.FLYWAY) {
+            .asConfig(FLYWAY) {
                 newMariaDbConfig()
             }
 
@@ -124,7 +126,7 @@ class IntegrationTest {
 
         val database = MARIADB
         val config = createJooqConfig(database)
-            .asConfig(MigrationEngine.LIQUIBASE) {
+            .asConfig(LIQUIBASE) {
                 newMariaDbConfig()
             }
 
@@ -142,7 +144,7 @@ class IntegrationTest {
 
         val database = POSTGRES
         val config = createJooqConfig(database)
-            .asConfig(MigrationEngine.FLYWAY) {
+            .asConfig(FLYWAY) {
                 newPostgresConfig()
             }
 
@@ -163,7 +165,7 @@ class IntegrationTest {
 
         val database = POSTGRES
         val config = createJooqConfig(database)
-            .asConfig(MigrationEngine.FLYWAY, listOf(additionalMigrationsDir)) {
+            .asConfig(FLYWAY, migrationPaths = migrationsFromResources("/migrations") + listOf(additionalMigrationsDir)) {
                 newPostgresConfig()
             }
 
@@ -207,7 +209,7 @@ class IntegrationTest {
         val secondPort = POSTGRES.defaultPort
 
         val config = createJooqConfig(POSTGRES, port = firstPort)
-            .asConfig(MigrationEngine.FLYWAY) {
+            .asConfig(FLYWAY) {
                 newPostgresConfig(hostPort = firstPort)
             }
 
@@ -217,13 +219,28 @@ class IntegrationTest {
 
 
         val newConfig = createJooqConfig(POSTGRES, port = secondPort)
-            .asConfig(MigrationEngine.FLYWAY) {
+            .asConfig(FLYWAY) {
                 newPostgresConfig(hostPort = secondPort)
             }
 
         createBuildFile(newConfig)
 
         assertBuildOutcome(SUCCESS)
+
+    }
+
+    @Test
+    fun liquibaseYamlTest() {
+
+        val config = createJooqConfig(POSTGRES)
+            .asConfig(LIQUIBASE, migrationPaths = migrationsFromResources("/liquibase-yml-migrations")) {
+                newPostgresConfig()
+            }
+
+        createBuildFile(config)
+
+        assertBuildOutcome(SUCCESS)
+
 
     }
 
@@ -392,24 +409,21 @@ class IntegrationTest {
             dependencies {
                 jooqModelatorRuntime('org.postgresql:postgresql:$PG_DRIVER_VERSION')
                 jooqModelatorRuntime('org.mariadb.jdbc:mariadb-java-client:$MARIADB_DRIVER_VERSION')
+                jooqModelatorRuntime('org.yaml:snakeyaml:1.26')
             }
 
         """.trimIndent()
 
     private fun File.asConfig(
         migrationEngine: MigrationEngine,
-        additionalMigrations: List<Path> = emptyList(),
+        migrationPaths: List<Path> = migrationsFromResources("/migrations", "/migrationsB"),
         dockerConfigProvider: () -> DockerConfig
     ): Configuration =
         Configuration(
             dockerConfig = dockerConfigProvider(),
             healthCheckConfig = HealthCheckConfig(),
-            migrationConfig = MigrationConfig(engine = migrationEngine, migrationsPaths = getMigrationPaths(additionalMigrations)),
+            migrationConfig = MigrationConfig(engine = migrationEngine, migrationsPaths = migrationPaths),
             jooqConfigPath = toPath()
         )
 
-    private fun getMigrationPaths(additionalMigrations: List<Path>): List<Path> = if (additionalMigrations.isEmpty())
-        migrationsFromResources("/migrations", "/migrationsB")
-    else
-        migrationsFromResources("/migrations") + additionalMigrations
 }

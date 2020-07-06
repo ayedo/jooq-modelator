@@ -71,7 +71,10 @@ class LiquibaseMigrator(databaseConfig: DatabaseConfig, migrationsPaths: List<Pa
 
         val changeLogFiles = migrationsPaths
             .map { path -> path.toFile() }
-            .flatMap { file: File -> file.listFiles { pathName -> pathName.nameWithoutExtension == "databaseChangeLog" }?.toList() ?: emptyList() }
+            .flatMap { file: File ->
+                file.listFiles { pathName -> pathName.nameWithoutExtension == "databaseChangeLog" }?.toList()
+                    ?: emptyList()
+            }
 
         if (changeLogFiles.isEmpty()) {
             throw IllegalStateException("Cannot find liquibase changelog file. It must be named 'databaseChangeLog'.")

@@ -1,0 +1,22 @@
+databaseChangeLog:
+
+  - changeSet:
+      id:  1
+      author:  bob
+      changes:
+        - createTable:
+            tableName:  tab
+            columns:
+              - column:
+                  name:  id
+                  type:  int
+                  autoIncrement:  true
+                  constraints:
+                    primaryKey:  true
+                    nullable:  false
+              - column:
+                  name:  firstname
+                  type:  varchar(50)
+              - column:
+                  name:  state
+                  type:  char(2)
