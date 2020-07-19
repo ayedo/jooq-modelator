@@ -25,7 +25,7 @@ dependencies {
     compile('org.jetbrains.kotlin:kotlin-stdlib-jdk8')
     compile('net.jodah:failsafe:2.4.0')
     compile('com.spotify:docker-client:8.16.0')
-    compile('org.flywaydb:flyway-core:6.4.4')
+    compile('org.flywaydb:flyway-core:6.5.1')
     compile('org.liquibase:liquibase-core:3.10.0') {
         exclude group: 'ch.qos.logback', module: 'logback-classic'
     }
