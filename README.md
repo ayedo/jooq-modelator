@@ -33,8 +33,8 @@ The plugin has been tested with Version 18.06.1-ce-mac73 (26764).
 
 Two migration engines are supported:
 
-- Flyway (version '6.4.4')
-- Liquibase (version '3.10.0')
+- Flyway (version '6.5.1')
+- Liquibase (version '3.10.1')
 
 __For Liquibase there are limitations:__
 
