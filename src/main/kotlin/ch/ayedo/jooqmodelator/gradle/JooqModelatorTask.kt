@@ -27,6 +27,9 @@ open class JooqModelatorTask : DefaultTask() {
     @OutputDirectory
     lateinit var jooqOutputPath: Path
 
+    @Input
+    lateinit var jooqEntitiesPath: String
+
     @InputFiles
     lateinit var migrationsPaths: List<Path>
 
@@ -63,13 +66,14 @@ open class JooqModelatorTask : DefaultTask() {
     @TaskAction
     fun generateMetamodel() {
 
-        val dockerConfig = DockerConfig(dockerTag, dockerLabelKey, dockerEnv, PortMapping(dockerHostPort, dockerContainerPort))
+        val dockerConfig =
+            DockerConfig(dockerTag, dockerLabelKey, dockerEnv, PortMapping(dockerHostPort, dockerContainerPort))
 
         val healthCheckConfig = HealthCheckConfig(delayMs, maxDurationMs, sql)
 
         val migrationsConfig = MigrationConfig(MigrationEngine.valueOf(migrationEngine), migrationsPaths)
 
-        val config = Configuration(dockerConfig, healthCheckConfig, migrationsConfig, jooqConfigPath)
+        val config = Configuration(dockerConfig, healthCheckConfig, migrationsConfig, jooqConfigPath, jooqEntitiesPath)
 
         val classLoader = URLClassLoader(jooqClasspath.toTypedArray(), this.javaClass.classLoader)
 

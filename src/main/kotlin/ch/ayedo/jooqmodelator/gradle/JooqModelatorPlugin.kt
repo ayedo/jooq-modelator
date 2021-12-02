@@ -25,11 +25,18 @@ open class JooqModelatorPlugin : Plugin<Project> {
             val task = project.tasks.create("generateJooqMetamodel", JooqModelatorTask::class.java).apply {
                 description = "Generates the jOOQ metamodel from migrations files using a dockerized database."
 
-                jooqConfigPath = Paths.get(config.jooqConfigPath
-                    ?: throw IncompletePluginConfigurationException("path to the jOOQ generator configuration (jooqConfigPath)"))
+                jooqConfigPath = Paths.get(
+                    config.jooqConfigPath
+                        ?: throw IncompletePluginConfigurationException("path to the jOOQ generator configuration (jooqConfigPath)")
+                )
 
-                jooqOutputPath = Paths.get(config.jooqOutputPath
-                    ?: throw IncompletePluginConfigurationException("path to the output directory (jooqOutputPath)"))
+                jooqOutputPath = Paths.get(
+                    config.jooqOutputPath
+                        ?: throw IncompletePluginConfigurationException("path to the output directory (jooqOutputPath)")
+                )
+
+                jooqEntitiesPath = config.jooqEntitiesPath
+                    ?: throw IncompletePluginConfigurationException("path to entites directory (jooqEntitiesPath)")
 
                 migrationsPaths = config.migrationsPaths?.map { strPath -> Paths.get(strPath) }
                     ?: throw IncompletePluginConfigurationException("path to the migration files (migrationsPaths)")
@@ -71,8 +78,18 @@ open class JooqModelatorPlugin : Plugin<Project> {
     private fun addJooqDependency(project: Project, modelatorRuntime: Configuration, config: JooqModelatorExtension) {
         val jooqVersion = config.jooqVersion
             ?: throw IncompletePluginConfigurationException("jOOQ version (jooqVersion)")
-
-        project.dependencies.add(modelatorRuntime.name, "${jooqEditionToGroupId(config.jooqEdition)}:jooq-codegen:${jooqVersion}")
+        project.dependencies.add(
+            modelatorRuntime.name,
+            "${jooqEditionToGroupId(config.jooqEdition)}:jooq-codegen:${jooqVersion}"
+        )
+        project.dependencies.add(
+            modelatorRuntime.name,
+            "${jooqEditionToGroupId(config.jooqEdition)}:jooq-meta:${jooqVersion}"
+        )
+        project.dependencies.add(
+            modelatorRuntime.name,
+            "${jooqEditionToGroupId(config.jooqEdition)}:jooq:${jooqVersion}"
+        )
     }
 
     // source: https://github.com/etiennestuder/gradle-jooq-plugin

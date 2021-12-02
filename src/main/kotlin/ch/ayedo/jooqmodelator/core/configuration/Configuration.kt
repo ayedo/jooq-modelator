@@ -1,14 +1,18 @@
 package ch.ayedo.jooqmodelator.core.configuration
 
-import com.spotify.docker.client.messages.ContainerConfig
-import com.spotify.docker.client.messages.HostConfig
-import com.spotify.docker.client.messages.PortBinding
+import com.github.dockerjava.api.model.ExposedPort
+import com.github.dockerjava.api.model.HostConfig
+import com.github.dockerjava.api.model.PortBinding
+import com.github.dockerjava.api.model.Ports
 import java.nio.file.Path
 
-data class Configuration(val dockerConfig: DockerConfig,
+data class Configuration(
+    val dockerConfig: DockerConfig,
     val healthCheckConfig: HealthCheckConfig,
     val migrationConfig: MigrationConfig,
-    val jooqConfigPath: Path)
+    val jooqConfigPath: Path,
+    val jooqEntitiesPath: String
+)
 
 data class MigrationConfig(val engine: MigrationEngine, val migrationsPaths: List<Path>)
 
@@ -18,33 +22,22 @@ enum class MigrationEngine {
 }
 
 @Suppress("SpellCheckingInspection")
-data class DockerConfig(val tag: String,
+data class DockerConfig(
+    val tag: String,
     val labelKey: String = "ch.ayedo.jooqmodelator",
     val env: List<String>,
-    val portMapping: PortMapping) {
+    val portMapping: PortMapping
+) {
 
     val labelValue = "tag=$tag cport=${portMapping.container} hport=${portMapping.host} env=[${env.joinToString()}]"
 
-    fun toContainerConfig(): ContainerConfig? {
-        val hostConfig = createHostConfig()
-
-        return ContainerConfig.builder()
-            .hostConfig(hostConfig)
-            .image(tag)
-            .env(env)
-            .exposedPorts(portMapping.container.toString())
-            .labels(mapOf(labelKey to labelValue))
-            .build()
-    }
-
-    private fun createHostConfig(): HostConfig {
-
-        val defaultPortBinding: PortBinding = PortBinding.of("0.0.0.0", portMapping.host)
-        val portBindings = mapOf(portMapping.container.toString() to listOf(defaultPortBinding))
-
-        return HostConfig.builder()
-            .portBindings(portBindings)
-            .build()
+    fun createHostConfig(): HostConfig {
+        val portBinding = PortBinding(
+            Ports.Binding.bindPort(portMapping.host),
+            ExposedPort(portMapping.container)
+        )
+        return HostConfig.newHostConfig()
+            .withPortBindings(portBinding)
     }
 }
 
