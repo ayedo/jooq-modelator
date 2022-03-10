@@ -14,12 +14,14 @@ import org.gradle.testkit.runner.TaskOutcome
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
 import org.gradle.testkit.runner.TaskOutcome.UP_TO_DATE
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption.REPLACE_EXISTING
+import java.util.*
 
 private const val DEFAULT_JOOQ_VERSION = "3.13.2"
 private const val PG_DRIVER_VERSION = "42.2.14"
@@ -57,6 +59,16 @@ class IntegrationTest {
 
         val subdirPath get() = "/$subdir"
         val dialect get() = dialectVersion?.let { "name_$dialectVersion" } ?: name
+    }
+
+    companion object {
+        private lateinit var pathNormalizer: PathNormalizer
+
+        @BeforeAll
+        @JvmStatic
+        internal fun beforeAll() {
+            pathNormalizer = DefaultPathNormalizer(File.separator)
+        }
     }
 
     @Rule
@@ -378,7 +390,7 @@ class IntegrationTest {
         File("${tempDir.root.absolutePath}/build.gradle").delete()
 
         tempDir.newFile("build.gradle").also {
-            val buildFileText = buildFileFromConfiguration(config, tempDir.root.absolutePath + jooqPackagePath)
+            val buildFileText = buildFileFromConfiguration(config, Paths.get(tempDir.root.absolutePath, jooqPackagePath))
 
             it.writeText(buildFileText)
         }
@@ -420,7 +432,7 @@ class IntegrationTest {
 
     private fun buildFileFromConfiguration(
         config: Configuration,
-        jooqOutputPath: String,
+        jooqOutputPath: Path,
         jooqVersion: String = DEFAULT_JOOQ_VERSION,
         jooqEdition: String = "OSS"
     ) =
@@ -435,17 +447,23 @@ class IntegrationTest {
 
                 jooqEdition = '$jooqEdition'
 
-                jooqConfigPath = '${config.jooqConfigPath}'
+                jooqConfigPath = '${
+            pathNormalizer.writePath(pathNormalizer.normalize(config.jooqConfigPath))
+        }'
 
-                jooqOutputPath = '$jooqOutputPath'
+                jooqOutputPath = '${
+            pathNormalizer.writePath(pathNormalizer.normalize(jooqOutputPath))
+        }'
                 
-                jooqEntitiesPath = '${config.jooqEntitiesPath}'
+                jooqEntitiesPath = '${
+            pathNormalizer.writePath(pathNormalizer.normalize(Paths.get(config.jooqEntitiesPath)))
+        }'
 
                 migrationsPaths = ${
             config.migrationConfig.migrationsPaths.joinToString(
                 prefix = "[",
                 postfix = "]"
-            ) { "'$it'" }
+            ) { "'${pathNormalizer.writePath(pathNormalizer.normalize(it))}'" }
         }
 
                 dockerTag = '${config.dockerConfig.tag}'
