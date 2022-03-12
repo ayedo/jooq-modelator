@@ -4,11 +4,9 @@ plugins {
 }
 
 apply plugin: 'java-gradle-plugin'
-
-project.ext.version = '1.0.0'
+apply from: "$rootDir/gradle/versioning.gradle"
 
 group 'net.i-neb.gradle.plugin'
-version project.ext.version
 
 repositories {
     jcenter()
