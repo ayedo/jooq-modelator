@@ -2,7 +2,7 @@ Jooq-Modelator
 ==============
 
 [![GitHub license](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://raw.githubusercontent.com/ayedo/jooq-modelator/master/LICENSE) 
-[![Build Status](http://teamcity.i-neb.net/app/rest/builds/buildType:(id:JooqModelator_Build)/statusIcon)](http://teamcity.i-neb.net/viewType.html?buildTypeId=JooqModelator_Build&guest=1)
+[![Build Status](https://teamcity.i-neb.net/app/rest/builds/buildType:(id:JooqModelator_Build)/statusIcon)](https://teamcity.i-neb.net/viewType.html?buildTypeId=JooqModelator_Build&guest=1)
 
 ## Overview
 
@@ -49,14 +49,34 @@ Due to backwards incompatible changes in the API, __no jooq generator version ol
 ## Installation
 
 Add the following to your *build.gradle* plugin configuration block:
-
-    plugins {
-          id 'ch.ayedo.jooqmodelator' version '3.9.0'
-    }
-build.gradle.kts
+build.gradle
 ```groovy
 plugins {
     id("jooq-modelator-plugin") version "1.0.0-SNAPSHOT"
+}
+```
+
+
+```groovy
+pluginManagement {
+    repositories {
+        maven {
+            url 'https://nexus.i-neb.net/repository/maven-snapshots/'
+        }
+        maven {
+            url 'https://nexus.i-neb.net/repository/maven-releases/'
+        }
+        gradlePluginPortal()
+        ...
+    }
+    ...
+}
+```
+
+build.gradle.kts
+```groovy
+plugins {
+    id("jooq-modelator-plugin") version "1.0.1"
 }
 ```
 settings.gradle.kts
@@ -64,12 +84,10 @@ settings.gradle.kts
 pluginManagement {
     repositories {
         maven {
-            url = uri("http://nexus.i-neb.net/repository/maven-snapshots/")
-            isAllowInsecureProtocol = true
+            url = uri("https://nexus.i-neb.net/repository/maven-snapshots/")
         }
         maven {
-            url = uri("http://nexus.i-neb.net/repository/maven-releases/")
-            isAllowInsecureProtocol = true
+            url = uri("https://nexus.i-neb.net/repository/maven-releases/")
         }
         maven { url = uri("https://repo.spring.io/milestone") }
         gradlePluginPortal()
