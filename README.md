@@ -52,6 +52,34 @@ Add the following to your *build.gradle* plugin configuration block:
     plugins {
           id 'ch.ayedo.jooqmodelator' version '3.9.0'
     }
+build.gradle.kts
+```groovy
+plugins {
+    id("jooq-modelator-plugin") version "1.0.0-SNAPSHOT"
+}
+```
+settings.gradle.kts
+```groovy
+pluginManagement {
+    repositories {
+        maven {
+            url = uri("http://nexus.i-neb.net/repository/maven-snapshots/")
+            isAllowInsecureProtocol = true
+        }
+        maven {
+            url = uri("http://nexus.i-neb.net/repository/maven-releases/")
+            isAllowInsecureProtocol = true
+        }
+        maven { url = uri("https://repo.spring.io/milestone") }
+        gradlePluginPortal()
+        ...
+    }
+    ...
+}
+
+```
+
+
 
 ## Configuration
 
