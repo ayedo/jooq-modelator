@@ -21,7 +21,8 @@ interface HealthChecker {
 }
 
 /* uses Flyway's exposed JDBC tooling to connect to the database */
-class FlywayDependentHealthChecker(databaseConfig: DatabaseConfig, healthCheckConfig: HealthCheckConfig) : HealthChecker {
+class FlywayDependentHealthChecker(databaseConfig: DatabaseConfig, healthCheckConfig: HealthCheckConfig) :
+    HealthChecker {
 
     private val sql = healthCheckConfig.sql
 

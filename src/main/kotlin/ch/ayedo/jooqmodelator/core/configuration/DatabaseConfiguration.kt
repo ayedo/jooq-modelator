@@ -36,9 +36,11 @@ data class DatabaseConfig(val driver: String, val url: String, val user: String,
                 DatabaseConfig(driver, url, user, password)
 
             } catch (e: Exception) {
-                throw IllegalStateException("Could not parse database configuration from jooq configuration file.\n" +
-                    "[XMLStreamReader=${xmlStreamReader::class.java} jooqConfigPath=${jooqConfigPath.toAbsolutePath()}\n" +
-                    "content=${jooqConfigPath.toFile().readText()}]", e)
+                throw IllegalStateException(
+                    "Could not parse database configuration from jooq configuration file.\n" +
+                            "[XMLStreamReader=${xmlStreamReader::class.java} jooqConfigPath=${jooqConfigPath.toAbsolutePath()}\n" +
+                            "content=${jooqConfigPath.toFile().readText()}]", e
+                )
             } finally {
                 xmlStreamReader.close()
             }

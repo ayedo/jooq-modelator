@@ -12,6 +12,8 @@ open class JooqModelatorExtension {
 
     var jooqOutputPath: String? = null
 
+    var jooqEntitiesPath: String? = null
+
     var migrationsPaths: List<String>? = null
 
     var dockerTag: String? = null

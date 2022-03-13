@@ -2,8 +2,25 @@ package ch.ayedo.jooqmodelator.core
 
 import ch.ayedo.jooqmodelator.core.configuration.Configuration
 import ch.ayedo.jooqmodelator.core.configuration.DatabaseConfig
-import com.spotify.docker.client.DefaultDockerClient
+import com.github.dockerjava.api.model.ExposedPort
+import com.github.dockerjava.core.DefaultDockerClientConfig
+import com.github.dockerjava.core.DockerClientImpl
+import com.github.dockerjava.httpclient5.ApacheDockerHttpClient
 import org.slf4j.LoggerFactory
+import org.w3c.dom.Document
+import org.w3c.dom.NodeList
+import org.xml.sax.InputSource
+import java.io.StringReader
+import java.io.StringWriter
+import javax.xml.parsers.DocumentBuilderFactory
+import javax.xml.transform.Transformer
+import javax.xml.transform.TransformerFactory
+import javax.xml.transform.dom.DOMSource
+import javax.xml.transform.stream.StreamResult
+import javax.xml.xpath.XPath
+import javax.xml.xpath.XPathConstants
+import javax.xml.xpath.XPathFactory
+
 
 @Suppress("SpellCheckingInspection")
 class Modelator(configuration: Configuration) {
@@ -20,27 +37,38 @@ class Modelator(configuration: Configuration) {
 
     private val migrationConfig = configuration.migrationConfig
 
-    private fun connectToDocker() = DefaultDockerClient.fromEnv().build()!!
+    private val jooqEntitiesPath = configuration.jooqEntitiesPath
 
     fun generate() {
-        connectToDocker().use { docker ->
+        val dockerClientConfig = DefaultDockerClientConfig.createDefaultConfigBuilder().build();
+        val httpClient = ApacheDockerHttpClient.Builder()
+            .dockerHost(dockerClientConfig.dockerHost)
+            .sslConfig(dockerClientConfig.sslConfig)
+            .build()
+        val dockerClient = DockerClientImpl.getInstance(dockerClientConfig, httpClient)
+
+        dockerClient.use { docker ->
             val tag = dockerConfig.tag
-
-            if (!docker.imageExists(tag)) {
-                docker.pull(tag)
-            }
-
-            val existingContainers = docker.findLabeledContainers(key = dockerConfig.labelKey, value = dockerConfig.labelValue)
+            docker.checkAndPullImage(tag)
+            val existingContainers =
+                docker.findLabeledContainers(key = dockerConfig.labelKey, value = dockerConfig.labelValue)
 
             val containerId =
                 if (existingContainers.isEmpty()) {
-                    docker.createContainer(dockerConfig.toContainerConfig()).id()!!
+                    dockerClient.createContainerCmd(dockerConfig.tag)
+                        .withHostConfig(dockerConfig.createHostConfig())
+                        .withEnv(dockerConfig.env)
+                        .withExposedPorts(ExposedPort(dockerConfig.portMapping.container))
+                        .withLabels(mapOf(dockerConfig.labelKey to dockerConfig.labelValue))
+                        .exec().id
                 } else {
                     if (existingContainers.size > 1) {
-                        log.warn("More than one container with tag ${dockerConfig.labelKey}=$tag has been found. " +
-                            "Using the one which was most recently created")
+                        log.warn(
+                            "More than one container with tag ${dockerConfig.labelKey}=$tag has been found. " +
+                                    "Using the one which was most recently created"
+                        )
                     }
-                    existingContainers.sortedBy { it.created() }.map { it.id() }.first()
+                    existingContainers.sortedBy { it.created }.map { it.id }.first()
                 }
 
             docker.useContainer(containerId) {
@@ -67,13 +95,31 @@ class Modelator(configuration: Configuration) {
     }
 
     private fun runJooqGenerator() {
-        val jooqConfig = jooqConfigPath.toFile().readText()
+        var jooqConfig = modifyJooqConfig(jooqConfigPath.toFile().readText())
 
-        val generationTool = Class.forName("org.jooq.codegen.GenerationTool", true, Thread.currentThread().contextClassLoader)
+        val generationTool =
+            Class.forName("org.jooq.codegen.GenerationTool", true, Thread.currentThread().contextClassLoader)
 
         val generateMethod = generationTool.getDeclaredMethod("generate", String::class.java)
 
         generateMethod.invoke(generationTool, jooqConfig)
+    }
+
+    private fun modifyJooqConfig(jooqConfig: String): String {
+        val doc: Document = DocumentBuilderFactory
+            .newInstance()
+            .newDocumentBuilder()
+            .parse(InputSource(StringReader(jooqConfig)))
+        val xPath: XPath = XPathFactory.newInstance().newXPath()
+        val targetDirectoryExpression = "/configuration/generator/target/directory"
+        val nodeList = xPath.compile(targetDirectoryExpression).evaluate(doc, XPathConstants.NODESET) as NodeList
+        for (i in 0 until nodeList.getLength()) {
+            nodeList.item(i).textContent = jooqEntitiesPath;
+        }
+        val transformer: Transformer = TransformerFactory.newInstance().newTransformer()
+        val writer = StringWriter()
+        transformer.transform(DOMSource(doc), StreamResult(writer));
+        return writer.getBuffer().toString()
     }
 
 }

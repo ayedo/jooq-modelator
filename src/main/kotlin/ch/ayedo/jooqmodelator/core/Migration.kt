@@ -64,7 +64,8 @@ class LiquibaseMigrator(databaseConfig: DatabaseConfig, migrationsPaths: List<Pa
         // TODO: not sure whether connection is closed correctly in this migrator
         val database = with(databaseConfig) {
             // Ugly workaround so that Liquibase uses the contextClassLoader
-            val flywayDataSource = DriverDataSource(Thread.currentThread().contextClassLoader, driver, url, user, password, null)
+            val flywayDataSource =
+                DriverDataSource(Thread.currentThread().contextClassLoader, driver, url, user, password, null)
             val connection = openConnection(flywayDataSource, 10)
             DatabaseFactory.getInstance().findCorrectDatabaseImplementation(JdbcConnection(connection))
         }
@@ -81,7 +82,15 @@ class LiquibaseMigrator(databaseConfig: DatabaseConfig, migrationsPaths: List<Pa
         }
 
         if (changeLogFiles.size > 1) {
-            throw IllegalStateException("More than one file named databaseChangeLog found in migrations folders:\nFiles: ${changeLogFiles.joinToString(prefix = "[", separator = ",", postfix = "]") { it.absolutePath }}")
+            throw IllegalStateException(
+                "More than one file named databaseChangeLog found in migrations folders:\nFiles: ${
+                    changeLogFiles.joinToString(
+                        prefix = "[",
+                        separator = ",",
+                        postfix = "]"
+                    ) { it.absolutePath }
+                }"
+            )
         }
 
         liquibase = Liquibase(changeLogFiles.first().toString(), FileSystemResourceAccessor(), database)
