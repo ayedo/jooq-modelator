@@ -11,7 +11,6 @@ group 'ch.ayedo'
 version project.ext.version
 
 repositories {
-    jcenter()
     mavenCentral()
 }
 
