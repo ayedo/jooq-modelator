@@ -409,7 +409,7 @@ class IntegrationTest {
             dependencies {
                 jooqModelatorRuntime('org.postgresql:postgresql:$PG_DRIVER_VERSION')
                 jooqModelatorRuntime('org.mariadb.jdbc:mariadb-java-client:$MARIADB_DRIVER_VERSION')
-                jooqModelatorRuntime('org.yaml:snakeyaml:1.26')
+                jooqModelatorRuntime('org.yaml:snakeyaml:1.33')
             }
 
         """.trimIndent()

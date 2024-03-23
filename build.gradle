@@ -36,7 +36,7 @@ dependencies {
     implementation('javax.activation:activation:1.1.1')
     implementation('com.sun.xml.bind:jaxb-impl:2.3.3')
 
-    runtimeOnly('org.yaml:snakeyaml:1.26')
+    runtimeOnly('org.yaml:snakeyaml:1.33')
 
     testImplementation('org.junit.jupiter:junit-jupiter-api:5.10.2')
     testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.10.2')
