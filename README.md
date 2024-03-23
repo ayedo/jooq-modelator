@@ -41,7 +41,7 @@ __For Liquibase there are limitations:__
 - You cannot choose the name of your database change log. __It has to be named 'databaseChangeLog'__. The file ending does not matter, and can be any of the supported file types.
 - All migration files need be located within the configured migrations folders (see section 'Configuration'). This is required for incremental build support.
 
-All databases which you can run in a Docker container, and for which a JDBC driver can be provided, are supported. The plugin has been successfully tested with Postgres 9.6, and MariaDB 10.2.
+All databases which you can run in a Docker container, and for which a JDBC driver can be provided, are supported. The plugin has been successfully tested with Postgres 12.3, and MariaDB 11.
 
 Due to backwards incompatible changes in the API, __no jooq generator version older than 3.11.0 is currently supported__.
 

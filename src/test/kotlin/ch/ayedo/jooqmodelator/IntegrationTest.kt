@@ -51,7 +51,7 @@ class IntegrationTest {
             dialectVersion = null
         ),
         MARIADB(
-            version = "10.2",
+            version = "11",
             defaultPort = 3306,
             db = "maria",
             user = "root",
