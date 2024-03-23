@@ -20,26 +20,26 @@ test {
 }
 
 dependencies {
-    compile gradleApi()
+    implementation(gradleApi())
 
-    compile('org.jetbrains.kotlin:kotlin-stdlib-jdk8')
-    compile('net.jodah:failsafe:2.4.0')
-    compile('com.spotify:docker-client:8.16.0')
-    compile('org.flywaydb:flyway-core:6.5.1')
-    compile('org.liquibase:liquibase-core:3.10.1') {
+    implementation('org.jetbrains.kotlin:kotlin-stdlib-jdk8')
+    implementation('net.jodah:failsafe:2.4.0')
+    implementation('com.spotify:docker-client:8.16.0')
+    implementation('org.flywaydb:flyway-core:6.5.1')
+    implementation('org.liquibase:liquibase-core:3.10.1') {
         exclude group: 'ch.qos.logback', module: 'logback-classic'
     }
-    compile('org.slf4j:slf4j-api:1.7.30')
+    implementation('org.slf4j:slf4j-api:1.7.30')
 
-    compile('javax.xml.bind:jaxb-api:2.3.1')
-    compile('com.sun.xml.bind:jaxb-core:2.3.0.1')
-    compile('javax.activation:activation:1.1.1')
-    compile('com.sun.xml.bind:jaxb-impl:2.3.3')
+    implementation('javax.xml.bind:jaxb-api:2.3.1')
+    implementation('com.sun.xml.bind:jaxb-core:2.3.0.1')
+    implementation('javax.activation:activation:1.1.1')
+    implementation('com.sun.xml.bind:jaxb-impl:2.3.3')
 
-    runtime('org.yaml:snakeyaml:1.26')
+    runtimeOnly('org.yaml:snakeyaml:1.26')
 
-    testCompile('org.junit.jupiter:junit-jupiter-api:5.6.2')
-    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.6.2')
+    testImplementation('org.junit.jupiter:junit-jupiter-api:5.6.2')
+    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.6.2')
 }
 
 pluginBundle {
