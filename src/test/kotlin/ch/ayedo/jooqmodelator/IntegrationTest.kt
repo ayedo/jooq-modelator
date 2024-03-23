@@ -27,7 +27,7 @@ import java.nio.file.Paths
 import java.nio.file.StandardCopyOption.REPLACE_EXISTING
 
 private const val DEFAULT_JOOQ_VERSION = "3.13.2"
-private const val PG_DRIVER_VERSION = "42.2.14"
+private const val PG_DRIVER_VERSION = "42.7.3"
 private const val MARIADB_DRIVER_VERSION = "2.6.0"
 
 class IntegrationTest {

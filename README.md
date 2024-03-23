@@ -133,7 +133,7 @@ You add your database drivers as follows:
 
     dependencies {
         // Add your JDBC drivers, and generator extensions here
-        jooqModelatorRuntime('org.postgresql:postgresql:42.2.6')
+        jooqModelatorRuntime('org.postgresql:postgresql:42.7.3')
     }
 
 ### Configuration Changes
