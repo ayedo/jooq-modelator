@@ -43,7 +43,7 @@ class IntegrationTest {
         private val subdir: String = ""
     ) {
         POSTGRES(
-            version = "12.3",
+            version = "16",
             defaultPort = 5432,
             db = "postgres",
             user = "postgres",
