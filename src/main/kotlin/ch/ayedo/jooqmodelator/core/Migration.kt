@@ -36,6 +36,7 @@ interface Migrator {
 class FlywayMigrator(databaseConfig: DatabaseConfig, migrationsPaths: List<Path>) : Migrator {
 
     private val flyway = Flyway.configure().apply {
+        cleanDisabled(false)
         with(databaseConfig) {
             dataSource(url, user, password)
         }
