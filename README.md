@@ -74,7 +74,7 @@ Add the following to your build script:
         // The version of the jooq-generator that should be used
         // The dependency is added, and loaded dynamically.
         // Only versions 3.11.0 and later are supported.
-        jooqVersion = '3.12.0' // required, this is an example
+        jooqVersion = '3.18.13' // required, this is an example
         
         // Which edition of the jooq-generator to be used.
         // Possible values are: "OSS", "PRO", "PRO_JAVA_6", or "TRIAL".
