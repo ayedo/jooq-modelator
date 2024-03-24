@@ -27,7 +27,7 @@ After the migrations the jooq-generator is run.
 
 You need to have Docker installed. The minimum supported java version is 17.
 
-The plugin has been tested with Version 18.06.1-ce-mac73 (26764).
+The plugin has been tested with Version 24.0.7 (afdd53b4e3).
 
 ## Supported Technologies
 
