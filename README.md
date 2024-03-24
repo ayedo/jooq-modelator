@@ -25,23 +25,23 @@ After the migrations the jooq-generator is run.
 
 ## Requirements
 
-You need to have Docker installed.
+You need to have Docker installed. The minimum supported java version is 17.
 
-The plugin has been tested with Version 18.06.1-ce-mac73 (26764).
+The plugin has been tested with Version 24.0.7 (afdd53b4e3).
 
 ## Supported Technologies
 
 Two migration engines are supported:
 
-- Flyway (version '6.5.1')
-- Liquibase (version '3.10.1')
+- Flyway (version '10.10.0')
+- Liquibase (version '3.10.3')
 
 __For Liquibase there are limitations:__
 
 - You cannot choose the name of your database change log. __It has to be named 'databaseChangeLog'__. The file ending does not matter, and can be any of the supported file types.
 - All migration files need be located within the configured migrations folders (see section 'Configuration'). This is required for incremental build support.
 
-All databases which you can run in a Docker container, and for which a JDBC driver can be provided, are supported. The plugin has been successfully tested with Postgres 9.6, and MariaDB 10.2.
+All databases which you can run in a Docker container, and for which a JDBC driver can be provided, are supported. The plugin has been successfully tested with Postgres 16, and MariaDB 11.
 
 Due to backwards incompatible changes in the API, __no jooq generator version older than 3.11.0 is currently supported__.
 
@@ -50,7 +50,7 @@ Due to backwards incompatible changes in the API, __no jooq generator version ol
 Add the following to your *build.gradle* plugin configuration block:
 
     plugins {
-          id 'ch.ayedo.jooqmodelator' version '3.9.0'
+          id 'ch.ayedo.jooqmodelator' version '4.0.0-SNAPSHOT'
     }
 
 ## Configuration
@@ -74,7 +74,7 @@ Add the following to your build script:
         // The version of the jooq-generator that should be used
         // The dependency is added, and loaded dynamically.
         // Only versions 3.11.0 and later are supported.
-        jooqVersion = '3.12.0' // required, this is an example
+        jooqVersion = '3.18.13' // required, this is an example
         
         // Which edition of the jooq-generator to be used.
         // Possible values are: "OSS", "PRO", "PRO_JAVA_6", or "TRIAL".
@@ -100,7 +100,7 @@ Add the following to your build script:
         // DOCKER RELATED CONFIGURATION
         
         // The tag of the image that will be pulled, and used to create the db container
-        dockerTag = 'postgres:11.5' // required, this is an example
+        dockerTag = 'postgres:16.2' // required, this is an example
     
         // The environment variables to be passed to the docker container
         dockerEnv = ['POSTGRES_DB=postgres', 'POSTGRES_USER=postgres', 'POSTGRES_PASSWORD=secret'] // required, this is an example
@@ -133,7 +133,7 @@ You add your database drivers as follows:
 
     dependencies {
         // Add your JDBC drivers, and generator extensions here
-        jooqModelatorRuntime('org.postgresql:postgresql:42.2.6')
+        jooqModelatorRuntime('org.postgresql:postgresql:42.7.3')
     }
 
 ### Configuration Changes

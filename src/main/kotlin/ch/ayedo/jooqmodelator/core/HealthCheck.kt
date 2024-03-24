@@ -26,7 +26,7 @@ class FlywayDependentHealthChecker(databaseConfig: DatabaseConfig, healthCheckCo
     private val sql = healthCheckConfig.sql
 
     private val driverDataSource = with(databaseConfig) {
-        DriverDataSource(Thread.currentThread().contextClassLoader, driver, url, user, password, null)
+        DriverDataSource(Thread.currentThread().contextClassLoader, driver, url, user, password)
     }
 
     private val retryPolicy = RetryPolicy<Boolean>().apply {
@@ -46,7 +46,7 @@ class FlywayDependentHealthChecker(databaseConfig: DatabaseConfig, healthCheckCo
 
             try {
 
-                connection = openConnection(driverDataSource, 10)
+                connection = openConnection(driverDataSource, 10, 120)
 
                 connection.createStatement().execute(sql)
 

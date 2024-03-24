@@ -26,9 +26,9 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption.REPLACE_EXISTING
 
-private const val DEFAULT_JOOQ_VERSION = "3.13.2"
-private const val PG_DRIVER_VERSION = "42.2.14"
-private const val MARIADB_DRIVER_VERSION = "2.6.0"
+private const val DEFAULT_JOOQ_VERSION = "3.18.13"
+private const val PG_DRIVER_VERSION = "42.7.3"
+private const val MARIADB_DRIVER_VERSION = "3.3.3"
 
 class IntegrationTest {
 
@@ -43,7 +43,7 @@ class IntegrationTest {
         private val subdir: String = ""
     ) {
         POSTGRES(
-            version = "12.3",
+            version = "16",
             defaultPort = 5432,
             db = "postgres",
             user = "postgres",
@@ -51,7 +51,7 @@ class IntegrationTest {
             dialectVersion = null
         ),
         MARIADB(
-            version = "10.2",
+            version = "11",
             defaultPort = 3306,
             db = "maria",
             user = "root",
@@ -327,7 +327,9 @@ class IntegrationTest {
 
     private fun fileExists(fileName: String) = File(fileName).exists()
 
-    private fun getResourcePath(path: String): Path = Paths.get(this.javaClass.getResource(path).toURI())
+    private fun getResourcePath(path: String): Path =
+        Paths.get(this.javaClass.getResource(path)?.toURI()
+            ?: error("'$path' is no valid path!"))
 
     private fun createBuildFile(config: Configuration) {
 
@@ -408,8 +410,10 @@ class IntegrationTest {
 
             dependencies {
                 jooqModelatorRuntime('org.postgresql:postgresql:$PG_DRIVER_VERSION')
-                jooqModelatorRuntime('org.mariadb.jdbc:mariadb-java-client:$MARIADB_DRIVER_VERSION')
-                jooqModelatorRuntime('org.yaml:snakeyaml:1.26')
+                jooqModelatorRuntime('org.mariadb.jdbc:mariadb-java-client:$MARIADB_DRIVER_VERSION') {
+                    exclude group: 'com.github.waffle', module: 'waffle-jna'
+                }
+                jooqModelatorRuntime('org.yaml:snakeyaml:1.33')
             }
 
         """.trimIndent()
