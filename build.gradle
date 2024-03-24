@@ -1,6 +1,6 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.9.23'
-    id 'com.gradle.plugin-publish' version '0.12.0'
+    id 'com.gradle.plugin-publish' version '1.2.1'
 }
 
 apply plugin: 'java-gradle-plugin'
@@ -40,16 +40,17 @@ dependencies {
     testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.10.2')
 }
 
-pluginBundle {
+gradlePlugin {
     website = 'https://github.com/ayedo/jooq-modelator'
     vcsUrl = 'https://github.com/ayedo/jooq-modelator.git'
-    tags = ['jOOQ', 'flyway', 'liquibase', 'migrations', 'metamodel']
     plugins {
         jooqModelatorPlugin {
             id = 'ch.ayedo.jooqmodelator'
+            implementationClass = 'ch.ayedo.jooqmodelator.gradle.JooqModelatorPlugin'
             displayName = 'Jooq-Modelator'
             description = 'Plugin to generate the jOOQ metamodel from Flyway & Liquibase migrations.'
             version = project.ext.version
+            tags.set(['jOOQ', 'flyway', 'liquibase', 'migrations', 'metamodel'])
         }
     }
 }
