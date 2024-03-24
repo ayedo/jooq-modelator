@@ -5,7 +5,7 @@ plugins {
 
 apply plugin: 'java-gradle-plugin'
 
-project.ext.version = '3.9.0'
+project.ext.version = '4.0.0-SNAPSHOT'
 
 group 'ch.ayedo'
 version project.ext.version
