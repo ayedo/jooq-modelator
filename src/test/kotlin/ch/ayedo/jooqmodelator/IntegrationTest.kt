@@ -28,7 +28,7 @@ import java.nio.file.StandardCopyOption.REPLACE_EXISTING
 
 private const val DEFAULT_JOOQ_VERSION = "3.13.2"
 private const val PG_DRIVER_VERSION = "42.7.3"
-private const val MARIADB_DRIVER_VERSION = "3.0.11"
+private const val MARIADB_DRIVER_VERSION = "3.3.3"
 
 class IntegrationTest {
 
@@ -410,7 +410,9 @@ class IntegrationTest {
 
             dependencies {
                 jooqModelatorRuntime('org.postgresql:postgresql:$PG_DRIVER_VERSION')
-                jooqModelatorRuntime('org.mariadb.jdbc:mariadb-java-client:$MARIADB_DRIVER_VERSION')
+                jooqModelatorRuntime('org.mariadb.jdbc:mariadb-java-client:$MARIADB_DRIVER_VERSION') {
+                    exclude group: 'com.github.waffle', module: 'waffle-jna'
+                }
                 jooqModelatorRuntime('org.yaml:snakeyaml:1.33')
             }
 
