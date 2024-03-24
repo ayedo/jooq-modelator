@@ -327,7 +327,9 @@ class IntegrationTest {
 
     private fun fileExists(fileName: String) = File(fileName).exists()
 
-    private fun getResourcePath(path: String): Path = Paths.get(this.javaClass.getResource(path).toURI())
+    private fun getResourcePath(path: String): Path =
+        Paths.get(this.javaClass.getResource(path)?.toURI()
+            ?: error("'$path' is no valid path!"))
 
     private fun createBuildFile(config: Configuration) {
 
