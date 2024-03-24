@@ -43,7 +43,7 @@ class IntegrationTest {
         private val subdir: String = ""
     ) {
         POSTGRES(
-            version = "12.5",
+            version = "16",
             defaultPort = 5432,
             db = "postgres",
             user = "postgres",
@@ -51,7 +51,7 @@ class IntegrationTest {
             dialectVersion = null
         ),
         MARIADB(
-            version = "10.2",
+            version = "11",
             defaultPort = 3306,
             db = "maria",
             user = "root",
