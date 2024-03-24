@@ -42,7 +42,7 @@ class FlywayMigrator(databaseConfig: DatabaseConfig, migrationsPaths: List<Path>
         }
 
 
-        val fileSystemPaths = migrationsPaths.map({ "filesystem:$it" }).toTypedArray()
+        val fileSystemPaths = migrationsPaths.map { "filesystem:$it" }.toTypedArray()
 
         locations(*fileSystemPaths)
     }.load()
